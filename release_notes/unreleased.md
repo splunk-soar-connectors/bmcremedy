@@ -1,8 +1,4 @@
-**BMC Remedy Release Notes - Published by Splunk November 12, 2021**
-
-
-**Version 2.0.2 - Released November 12, 2021**
-
+**Unreleased**
 * Python3 compatibility changes
 * Fixed the 'vault_id' parameter issue in the 'create ticket' and 'update ticket' actions [PAPP-18435]
 * Fixed the issue in the 'add comment' action [PAPP-20926]
