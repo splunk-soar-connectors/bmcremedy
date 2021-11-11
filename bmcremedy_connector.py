@@ -13,18 +13,16 @@
 # either express or implied. See the License for the specific language governing permissions
 # and limitations under the License.
 #
-#
-# Standard library imports
+
 import json
 import re
+
+import phantom.app as phantom
+import phantom.rules as ph_rules
 import requests
 from bs4 import BeautifulSoup
-
-# Phantom imports
-import phantom.app as phantom
-from phantom.base_connector import BaseConnector
 from phantom.action_result import ActionResult
-import phantom.rules as ph_rules
+from phantom.base_connector import BaseConnector
 
 # Local imports
 import bmcremedy_consts as consts
@@ -160,7 +158,10 @@ class BmcremedyConnector(BaseConnector):
             if parameter < 0:
                 return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_NON_NEG_INT_MSG.format(param=key)), None
             if not allow_zero and parameter == 0:
-                return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_NON_NEG_NON_ZERO_INT_MSG.format(param=key)), None
+                return action_result.set_status(
+                    phantom.APP_ERROR,
+                    consts.BMCREMEDY_NON_NEG_NON_ZERO_INT_MSG.format(param=key)
+                ), None
 
         return phantom.APP_SUCCESS, parameter
 
@@ -242,7 +243,10 @@ class BmcremedyConnector(BaseConnector):
         attachment_list = [value.strip() for value in attachment_list.split(',') if value.strip()]
         if not attachment_list:
             self.debug_print(consts.BMCREMEDY_ERR_INVALID_FIELDS.format(field='vault_id'))
-            return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_ERR_INVALID_FIELDS.format(field='vault_id')), None, None
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                consts.BMCREMEDY_ERR_INVALID_FIELDS.format(field='vault_id')
+            ), None, None
 
         # At most, three attachments should be provided
         if len(attachment_list) > 3:
@@ -266,7 +270,10 @@ class BmcremedyConnector(BaseConnector):
                         break
                 if not file_found:
                     self.debug_print("{}: {}".format(consts.BMCREMEDY_UNKNOWN_VAULT_ID, vault_id))
-                    return action_result.set_status(phantom.APP_ERROR, "{}: {}".format(consts.BMCREMEDY_UNKNOWN_VAULT_ID, vault_id)), None, None
+                    return action_result.set_status(
+                        phantom.APP_ERROR,
+                        "{}: {}".format(consts.BMCREMEDY_UNKNOWN_VAULT_ID, vault_id)
+                    ), None, None
         except Exception as e:
             err_msg = self._get_error_message_from_exception(e)
             return action_result.set_status(phantom.APP_ERROR, err_msg), None, None
@@ -433,7 +440,8 @@ class BmcremedyConnector(BaseConnector):
                                         verify=self._verify_server_cert)
         except requests.exceptions.ConnectionError as e:
             self.debug_print(self._get_error_message_from_exception(e))
-            error_msg = "Error connecting to server. Connection refused from server for {}".format('{}{}'.format(self._base_url, endpoint))
+            error_msg = "Error connecting to server. Connection refused from server for {}".format(
+                '{}{}'.format(self._base_url, endpoint))
             return RetVal3(action_result.set_status(phantom.APP_ERROR, error_msg), response_data, response)
         except Exception as error:
             error_msg = self._get_error_message_from_exception(error)
@@ -477,7 +485,10 @@ class BmcremedyConnector(BaseConnector):
 
             # Set the action_result status to error, the handler function will most probably return as is
             action_result_error_msg = "{}. {}".format(
-                consts.BMCREMEDY_ERR_FROM_SERVER.format(status=response.status_code, detail=consts.ERROR_RESPONSE_DICT[response.status_code]),
+                consts.BMCREMEDY_ERR_FROM_SERVER.format(
+                    status=response.status_code,
+                    detail=consts.ERROR_RESPONSE_DICT[response.status_code]
+                ),
                 response_message
             )
             return RetVal3(action_result.set_status(phantom.APP_ERROR, action_result_error_msg), response_data, response)
@@ -994,12 +1005,13 @@ class BmcremedyConnector(BaseConnector):
 if __name__ == '__main__':
 
     import sys
+
     import pudb
 
     pudb.set_trace()
     if len(sys.argv) < 2:
         print('No test json specified as input')
-        exit(0)
+        sys.exit(0)
     with open(sys.argv[1]) as f:
         in_json = f.read()
         in_json = json.loads(in_json)
@@ -1008,4 +1020,4 @@ if __name__ == '__main__':
         connector.print_progress_message = True
         return_value = connector._handle_action(json.dumps(in_json), None)
         print(json.dumps(json.loads(return_value), indent=4))
-    exit(0)
+    sys.exit(0)
