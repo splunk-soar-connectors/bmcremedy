@@ -12,9 +12,11 @@
 # the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 # either express or implied. See the License for the specific language governing permissions
 # and limitations under the License.
+#
+
 BMCREMEDY_CONFIG_SERVER = "url"
 BMCREMEDY_CONFIG_API_USERNAME = "username"
-BMCREMEDY_CONFIG_API_PASSWORD = "password"
+BMCREMEDY_CONFIG_API_PASSWORD = "password"  # pragma: allowlist secret
 BMCREMEDY_CONFIG_SERVER_CERT = "verify_server_cert"
 BMCREMEDY_REST_RESP_TOKEN_SUCCESS = 200
 BMCREMEDY_REST_RESP_CREATE_SUCCESS = 201
@@ -98,10 +100,12 @@ BMCREMEDY_VALID_INT_MSG = "Please provide a valid integer value in the '{param}'
 BMCREMEDY_NON_NEG_NON_ZERO_INT_MSG = "Please provide a valid non-zero positive integer value in '{param}' parameter"
 BMCREMEDY_NON_NEG_INT_MSG = "Please provide a valid non-negative integer value in the '{param}' parameter"
 
-BMCREMEDY_STATE_FILE_CORRUPT_ERR = "Error occurred while loading the state file due to its unexpected format. Resetting the state file with the default format. Please try again"
+BMCREMEDY_STATE_FILE_CORRUPT_ERR = ("Error occurred while loading the state file due to its unexpected format. "
+                                    "Resetting the state file with the default format. Please try again")
 BMCREMEDY_FIELDS_PARAM_ERR_MSG = ("Please provide JSON formatted dictionary in the 'fields' action parameter "
-                                  "e.g: {\"First_Name\": \"Customer First Name\", \"Last_Name\": \"Customer Last Name\", \"Description\": \"Incident Description\", "
-                                  "\"Service_Type\": \"User Service Restoration\", \"Reported Source\": \"Direct Input\", \"Status\": \"Assigned\", "
+                                  "e.g: {\"First_Name\": \"Customer First Name\", \"Last_Name\": \"Customer Last Name\", "
+                                  "\"Description\": \"Incident Description\", \"Service_Type\": \"User Service Restoration\", "
+                                  "\"Reported Source\": \"Direct Input\", \"Status\": \"Assigned\", "
                                   "\"Assignee Login ID\": \"User\", \"Assignee\": \"User Name\"}")
 
 # Dictionary that maps each error code with its corresponding message
