@@ -370,9 +370,9 @@ class BmcremedyConnector(BaseConnector):
 
         # Prepare request headers
         if files:
-            headers = {"Authorization": f"AR-JWT {self._token}"}
+            headers = {"Authorization": "AR-JWT {}".format(self._token)}
         else:
-            headers = {'Content-Type': 'application/json', "Authorization": f"AR-JWT {self._token}"}
+            headers = {'Content-Type': 'application/json', "Authorization": "AR-JWT {}".format(self._token)}
 
         # Updating headers if Content-Type is 'multipart/formdata'
         if accept_headers:
