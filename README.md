@@ -47,7 +47,7 @@ Incidents are typically categorized among following types:
     -   A 'offset' action parameter has been added in the 'list tickets' action
 
 -   The existing output data paths have been modified for the 'list tickets' action. Hence, it is
-    requeste to the end-user to please update their existing playbooks by re-inserting \| modifying
+    requested to the end-user to please update their existing playbooks by re-inserting \| modifying
     \| deleting the corresponding action blocks to ensure the correct functioning of the playbooks
     created on the earlier versions of the app.
 
