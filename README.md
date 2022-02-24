@@ -2,17 +2,17 @@
 # BMC Remedy
 
 Publisher: Splunk  
-Connector Version: 2\.0\.3  
+Connector Version: 2\.0\.4  
 Product Vendor: BMC Software  
 Product Name: BMC Remedy  
 Product Version Supported (regex): "\.\*"  
-Minimum Product Version: 4\.10\.0\.40961  
+Minimum Product Version: 5\.1\.0  
 
 This app supports ticket management functions on incidents in BMC Remedy
 
-[comment]: # " File: readme.md"
+[comment]: # " File: README.md"
 [comment]: # ""
-[comment]: # "  Copyright (c) 2017-2021 Splunk Inc."
+[comment]: # "  Copyright (c) 2017-2022 Splunk Inc."
 [comment]: # ""
 [comment]: # "  Licensed under the Apache License, Version 2.0 (the 'License');"
 [comment]: # "  you may not use this file except in compliance with the License."
