@@ -17,7 +17,7 @@ This app supports ticket management functions on incidents in BMC Remedy
 [comment]: # "  Licensed under the Apache License, Version 2.0 (the 'License');"
 [comment]: # "  you may not use this file except in compliance with the License."
 [comment]: # "  You may obtain a copy of the License at"
-[comment]: # "  "
+[comment]: # ""
 [comment]: # "      http://www.apache.org/licenses/LICENSE-2.0"
 [comment]: # ""
 [comment]: # "  Unless required by applicable law or agreed to in writing, software distributed under"
@@ -50,6 +50,17 @@ Incidents are typically categorized among following types:
     requested to the end-user to please update their existing playbooks by re-inserting \| modifying
     \| deleting the corresponding action blocks to ensure the correct functioning of the playbooks
     created on the earlier versions of the app.
+
+## Using a template for the create ticket action
+
+In order to create a ticket from a pre-existing incident template in BMC remedy, the **fields**
+action parameter can be used. Passing in a JSON such as,
+
+    {"TemplateID": "$templateid"}
+
+Referencing an existing template id simplifies the ticket creation. For more information refer this
+[document](https://docs.bmc.com/docs/bsr/35/creating-incidents-by-passing-a-template-reference-576950232.html#Creatingincidentsbypassingatemplatereference-instance_id)
+.
 
 
 ### Configuration Variables
