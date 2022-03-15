@@ -1,11 +1,11 @@
 <!-- File: readme.html
 
-  Copyright (c) 2017-2021 Splunk Inc.
+  Copyright (c) 2017-2022 Splunk Inc.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-  
+
       http://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software distributed under
@@ -53,3 +53,6 @@
         </li>
     </ul>
 </p>
+<h2>Using a template for the create ticket action</h2>
+<p>In order to create a ticket from a pre-existing incident template in BMC remedy, the <strong>fields</strong> action parameter can be used.
+Passing in a JSON such as, <pre>{"TemplateID": "$templateid"}</pre> Referencing an existing template id simplifies the ticket creation. For more information refer this <a href="https://docs.bmc.com/docs/bsr/35/creating-incidents-by-passing-a-template-reference-576950232.html#Creatingincidentsbypassingatemplatereference-instance_id" target=“_blank”>document</a>.</p>
