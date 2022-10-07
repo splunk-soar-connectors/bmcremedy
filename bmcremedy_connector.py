@@ -928,8 +928,9 @@ class BmcremedyConnector(BaseConnector):
         incident_number = param[consts.BMCREMEDY_INCIDENT_NUMBER]
 
         # List of optional parameters
-        optional_parameters = {"comment": "Detailed Description", "view_access": "View Access",
-                               "secure_work_log": "Secure Work Log"}
+        optional_parameters = {"description": "Description", "comment": "Detailed Description",
+                               "view_access": "View Access", "secure_work_log": "Secure Work Log",
+                               "worklog_submitter": "Work Log Submitter"}
 
         # Adding mandatory parameters
         add_attachment_details_param.update({
