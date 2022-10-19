@@ -110,8 +110,10 @@ class BmcremedyConnector(BaseConnector):
         :param e: Exception object
         :return: error message
         """
-        error_code = consts.ERR_CODE_MSG
+        error_code = None
         error_msg = consts.ERR_MSG_UNAVAILABLE
+
+        self.error_print("Error occurred:", e)
 
         try:
             if hasattr(e, "args"):
@@ -119,19 +121,14 @@ class BmcremedyConnector(BaseConnector):
                     error_code = e.args[0]
                     error_msg = e.args[1]
                 elif len(e.args) == 1:
-                    error_code = consts.ERR_CODE_MSG
                     error_msg = e.args[0]
-        except:
+        except Exception:
             pass
 
-        try:
-            if error_code in consts.ERR_CODE_MSG:
-                error_text = "Error Message: {}".format(error_msg)
-            else:
-                error_text = "Error Code: {}. Error Message: {}".format(error_code, error_msg)
-        except:
-            self.debug_print(consts.PARSE_ERR_MSG)
-            error_text = consts.PARSE_ERR_MSG
+        if not error_code:
+            error_text = "Error Message: {}".format(error_msg)
+        else:
+            error_text = "Error Code: {}. Error Message: {}".format(error_code, error_msg)
 
         return error_text
 
@@ -338,7 +335,8 @@ class BmcremedyConnector(BaseConnector):
                 url = re.findall("(?:/api).*", url)[0]
 
         except Exception as e:
-            self.debug_print(consts.BMCREMEDY_ERROR_FETCHING_URL.format(error=e))
+            msg = self._get_error_message_from_exception(e)
+            self.error_print(consts.BMCREMEDY_ERROR_FETCHING_URL.format(error=msg))
             return phantom.APP_ERROR, None
 
         return phantom.APP_SUCCESS, url
@@ -421,12 +419,12 @@ class BmcremedyConnector(BaseConnector):
         try:
             request_func = getattr(requests, method)
         except AttributeError:
-            self.debug_print(consts.BMCREMEDY_ERR_API_UNSUPPORTED_METHOD.format(method=method))
+            self.error_print(consts.BMCREMEDY_ERR_API_UNSUPPORTED_METHOD.format(method=method))
             # Set the action_result status to error, the handler function will most probably return as is
             return RetVal3(action_result.set_status(phantom.APP_ERROR), response_data, response)
         except Exception as e:
             error_msg = "{}. {}".format(consts.BMCREMEDY_EXCEPTION_OCCURRED, self._get_error_message_from_exception(e))
-            self.debug_print(error_msg)
+            self.error_print(error_msg)
             # Set the action_result status to error, the handler function will most probably return as is
             return RetVal3(action_result.set_status(phantom.APP_ERROR, error_msg), response_data, response)
 
@@ -438,13 +436,13 @@ class BmcremedyConnector(BaseConnector):
                 response = request_func('{}{}'.format(self._base_url, endpoint), headers=headers, data=data, params=params,
                                         verify=self._verify_server_cert)
         except requests.exceptions.ConnectionError as e:
-            self.debug_print(self._get_error_message_from_exception(e))
+            self._get_error_message_from_exception(e)
             error_msg = "Error connecting to server. Connection refused from server for {}".format(
                 '{}{}'.format(self._base_url, endpoint))
             return RetVal3(action_result.set_status(phantom.APP_ERROR, error_msg), response_data, response)
         except Exception as error:
             error_msg = self._get_error_message_from_exception(error)
-            self.debug_print(consts.BMCREMEDY_REST_CALL_ERROR.format(error=error_msg))
+            self.error_print(consts.BMCREMEDY_REST_CALL_ERROR.format(error=error_msg))
             # Set the action_result status to error, the handler function will most probably return as is
             action_result_error_msg = "{}. {}".format(consts.BMCREMEDY_ERR_SERVER_CONNECTION, error_msg)
             return RetVal3(action_result.set_status(phantom.APP_ERROR, action_result_error_msg), response_data, response)
@@ -564,7 +562,7 @@ class BmcremedyConnector(BaseConnector):
                 return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_FIELDS_PARAM_ERR_MSG)
         except Exception as e:
             error_msg = self._get_error_message_from_exception(e)
-            self.debug_print(consts.BMCREMEDY_JSON_LOADS_ERROR.format(error_msg))
+            self.error_print(consts.BMCREMEDY_JSON_LOADS_ERROR.format(error_msg))
             return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_JSON_LOADS_ERROR.format(error_msg))
 
         attachment_list = param.get(consts.BMCREMEDY_JSON_VAULT_ID, '')
@@ -629,7 +627,7 @@ class BmcremedyConnector(BaseConnector):
 
         except Exception as e:
             error_msg = self._get_error_message_from_exception(e)
-            self.debug_print("Error while summarizing data: {}".format(error_msg))
+            self.error_print("Error while summarizing data: {}".format(error_msg))
             return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_SUMMARY_ERROR.format(
                 action_name="create_ticket"))
 
@@ -671,7 +669,8 @@ class BmcremedyConnector(BaseConnector):
             if isinstance(fields_param, list):
                 return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_FIELDS_PARAM_ERR_MSG)
         except Exception as e:
-            self.debug_print(consts.BMCREMEDY_JSON_LOADS_ERROR.format(e))
+            msg = self._get_error_message_from_exception(e)
+            self.error_print(consts.BMCREMEDY_JSON_LOADS_ERROR.format(msg))
             return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_JSON_LOADS_ERROR.format(e))
 
         incident_number = fields_param.get("Incident Number", param[consts.BMCREMEDY_INCIDENT_NUMBER])
