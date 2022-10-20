@@ -16,6 +16,7 @@
 import json
 import re
 
+import encryption_helper
 import phantom.app as phantom
 import phantom.rules as ph_rules
 import requests
@@ -49,6 +50,76 @@ class BmcremedyConnector(BaseConnector):
         self._state = dict()
         return
 
+    def _decrypt_state(state, salt):
+        """
+        Decrypts the state.
+
+        :param state: state dictionary
+        :param salt: salt used for decryption
+        :return: decrypted state
+        """
+        if not state.get("is_encrypted"):
+            return state
+
+        token = state.get("token")
+        if token:
+            state["token"] = encryption_helper.decrypt(token, salt)
+
+        return state
+
+    def _encrypt_state(state, salt):
+        """
+        Encrypts the state.
+
+        :param state: state dictionary
+        :param salt: salt used for encryption
+        :return: encrypted state
+        """
+
+        token = state.get("token")
+        if token:
+            state["token"] = encryption_helper.encrypt(token, salt)
+
+        state["is_encrypted"] = True
+
+        return state
+
+    def load_state(self):
+        """
+        Load the contents of the state file to the state dictionary and decrypt it.
+
+        :return: loaded state
+        """
+        state = super().load_state()
+        if not isinstance(state, dict):
+            self.debug_print("Reseting the state file with the default format")
+            state = {
+                "app_version": self.get_app_json().get('app_version')
+            }
+            return state
+        try:
+            state = self._decrypt_state(state, self.get_asset_id())
+        except Exception as e:
+            self.error_print(consts.BMCREMEDY_DECRYPTION_ERR, e)
+            state = None
+
+        return state
+
+    def save_state(self, state):
+        """
+        Encrypt and save the current state dictionary to the the state file.
+
+        :param state: state dictionary
+        :return: status
+        """
+        try:
+            state = self._encrypt_state(state, self.get_asset_id())
+        except Exception as e:
+            self.error_print(consts.BMCREMEDY_ENCRYPTION_ERR, e)
+            return phantom.APP_ERROR
+
+        return super().save_state(state)
+
     def initialize(self):
         """ This is an optional function that can be implemented by the AppConnector derived class. Since the
         configuration dictionary is already validated by the time this function is called, it's a good place to do any
@@ -67,11 +138,7 @@ class BmcremedyConnector(BaseConnector):
 
         # Load any saved configurations
         self._state = self.load_state()
-        if not isinstance(self._state, dict):
-            self.debug_print("Resetting the state file with the default format")
-            self._state = {
-                "app_version": self.get_app_json().get('app_version')
-            }
+        if self._state is None:
             return self.set_status(phantom.APP_ERROR, consts.BMCREMEDY_STATE_FILE_CORRUPT_ERR)
 
         self._token = self._state.get('token')

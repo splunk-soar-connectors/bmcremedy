@@ -89,6 +89,8 @@ BMCREMEDY_SET_STATUS_MESSAGE = "Set status successful"
 BMCREMEDY_UPDATE_SUCCESSFUL_MSG = "Incident updated successfully"
 BMCREMEDY_GET_COMMENT_ERROR = "Error while getting comments for incident ID: {id}"
 BMCREMEDY_ERR_INVALID_FIELDS = "Please provide a valid value in the '{field}' parameter"
+BMCREMEDY_ENCRYPTION_ERR = "Error occurred while encrypting the state file"
+BMCREMEDY_DECRYPTION_ERR = "Error occurred while decrypting the state file"
 
 # Constants relating to 'get_error_message_from_exception'
 ERR_CODE_MSG = "Error code unavailable"
