@@ -45,12 +45,11 @@ class BmcremedyConnector(BaseConnector):
         self._base_url = None
         self._api_username = None
         self._api_password = None
-        self._token = None
         self._verify_server_cert = None
         self._state = dict()
         return
 
-    def _decrypt_state(state, salt):
+    def _decrypt_state(self, state, salt):
         """
         Decrypts the state.
 
@@ -67,7 +66,7 @@ class BmcremedyConnector(BaseConnector):
 
         return state
 
-    def _encrypt_state(state, salt):
+    def _encrypt_state(self, state, salt):
         """
         Encrypts the state.
 
@@ -140,9 +139,6 @@ class BmcremedyConnector(BaseConnector):
         self._state = self.load_state()
         if self._state is None:
             return self.set_status(phantom.APP_ERROR, consts.BMCREMEDY_STATE_FILE_CORRUPT_ERR)
-
-        self._token = self._state.get('token')
-
         # Return response_status
         return phantom.APP_SUCCESS
 
@@ -258,8 +254,6 @@ class BmcremedyConnector(BaseConnector):
         :return: status phantom.APP_SUCCESS/phantom.APP_ERROR (along with appropriate message)
         """
 
-        self._token = ""
-
         # Prepare request headers
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 
@@ -284,7 +278,7 @@ class BmcremedyConnector(BaseConnector):
             return action_result.get_status()
 
         # Saving the token to be used in subsequent actions
-        self._state['token'] = self._token = response_dict["content"].decode("utf-8")
+        self._state['token'] = response_dict["content"].decode("utf-8")
 
         return phantom.APP_SUCCESS
 
@@ -428,16 +422,16 @@ class BmcremedyConnector(BaseConnector):
         response_data = None
 
         # Generate new token if not available
-        if not self._token:
+        if not self._state.get('token'):
             ret_code = self._generate_api_token(action_result)
             if phantom.is_fail(ret_code):
                 return action_result.get_status(), response_data
 
         # Prepare request headers
         if files:
-            headers = {"Authorization": "AR-JWT {}".format(self._token)}
+            headers = {"Authorization": "AR-JWT {}".format(self._state.get('token'))}
         else:
-            headers = {'Content-Type': 'application/json', "Authorization": "AR-JWT {}".format(self._token)}
+            headers = {'Content-Type': 'application/json', "Authorization": "AR-JWT {}".format(self._state.get('token'))}
 
         # Updating headers if Content-Type is 'multipart/formdata'
         if accept_headers:
@@ -454,7 +448,7 @@ class BmcremedyConnector(BaseConnector):
                 return action_result.get_status(), response_data
 
             # Update headers with new token
-            headers["Authorization"] = "AR-JWT {}".format(self._token)
+            headers["Authorization"] = "AR-JWT {}".format(self._state.get('token'))
             # Retry the REST call with new token generated
             rest_ret_code, response_data, response = self._make_rest_call(endpoint, intermediate_action_result, headers=headers,
                                                            params=params, data=data, method=method)
@@ -1063,7 +1057,6 @@ class BmcremedyConnector(BaseConnector):
         """
 
         # save state
-        self._state['token'] = self._token
         self.save_state(self._state)
         return phantom.APP_SUCCESS
 
