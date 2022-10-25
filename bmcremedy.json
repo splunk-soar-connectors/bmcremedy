@@ -2796,6 +2796,20 @@
                     "data_type": "string"
                 },
                 {
+                    "data_path": "action_result.data.*.entries.*.values.Status-History.In Progress.user",
+                    "data_type": "string",
+                    "example_values": [
+                        "appadmin"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.entries.*.values.Status-History.In Progress.timestamp",
+                    "data_type": "string",
+                    "example_values": [
+                        "2022-10-20T10:21:57.000+0000"
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.work_details.entries.*.values.Thumbnail 1",
                     "data_type": "string"
                 },
