@@ -33,12 +33,12 @@ BMCREMEDY_REST_RESP_METHOD_NOT_ALLOWED = 405
 BMCREMEDY_REST_RESP_METHOD_NOT_ALLOWED_MSG = "Method not allowed"
 BMCREMEDY_REST_RESP_INTERNAL_SERVER_ERROR = 500
 BMCREMEDY_REST_RESP_INTERNAL_SERVER_ERROR_MSG = "Internal server error"
-BMCREMEDY_ERR_API_UNSUPPORTED_METHOD = "Unsupported method {method}"
+BMCREMEDY_ERROR_API_UNSUPPORTED_METHOD = "Unsupported method {method}"
 BMCREMEDY_EXCEPTION_OCCURRED = "Exception occurred"
 BMCREMEDY_TOKEN_ENDPOINT = "/api/jwt/login"
-BMCREMEDY_ERR_SERVER_CONNECTION = "Connection failed"
-BMCREMEDY_ERR_FROM_SERVER = "API failed. Status code: {status}. Details: {detail}"
-BMCREMEDY_ERR_JSON_PARSE = "Unable to parse the fields parameter into a dictionary.\nResponse text - {raw_text}"
+BMCREMEDY_ERROR_SERVER_CONNECTION = "Connection failed"
+BMCREMEDY_ERROR_FROM_SERVER = "API failed. Status code: {status}. Details: {detail}"
+BMCREMEDY_ERROR_JSON_PARSE = "Unable to parse the fields parameter into a dictionary.\nResponse text - {raw_text}"
 BMCREMEDY_REST_RESP_OTHER_ERROR_MSG = "Unknown error occurred"
 BMCREMEDY_LIST_TICKETS = "/api/arsys/v1/entry/HPD:IncidentInterface?fields=values(Incident Number,First Name," \
                          "Last Name,Description,Status,Priority,Assigned Group,Assignee)"
@@ -88,23 +88,23 @@ BMCREMEDY_ADD_COMMENT_MESSAGE = "Comment added successfully"
 BMCREMEDY_SET_STATUS_MESSAGE = "Set status successful"
 BMCREMEDY_UPDATE_SUCCESSFUL_MSG = "Incident updated successfully"
 BMCREMEDY_GET_COMMENT_ERROR = "Error while getting comments for incident ID: {id}"
-BMCREMEDY_ERR_INVALID_FIELDS = "Please provide a valid value in the '{field}' parameter"
-BMCREMEDY_ENCRYPTION_ERR = "Error occurred while encrypting the state file"
-BMCREMEDY_DECRYPTION_ERR = "Error occurred while decrypting the state file"
+BMCREMEDY_ERROR_INVALID_FIELDS = "Please provide a valid value in the '{field}' parameter"
+BMCREMEDY_ENCRYPTION_ERROR = "Error occurred while encrypting the state file"
+BMCREMEDY_DECRYPTION_ERROR = "Error occurred while decrypting the state file"
 
 # Constants relating to 'get_error_message_from_exception'
-ERR_CODE_MSG = "Error code unavailable"
-ERR_MSG_UNAVAILABLE = "Error message unavailable. Please check the asset configuration and|or action parameters."
-PARSE_ERR_MSG = "Unable to parse the error message. Please check the asset configuration and|or action parameters."
+BMCREMEDY_ERROR_CODE_MSG = "Error code unavailable"
+BMCREMEDY_ERROR_MSG_UNAVAILABLE = "Error message unavailable. Please check the asset configuration and|or action parameters."
+BMCREMEDY_PARSE_ERROR_MSG = "Unable to parse the error message. Please check the asset configuration and|or action parameters."
 
 # Constants relating to 'validate_integer'
 BMCREMEDY_VALID_INT_MSG = "Please provide a valid integer value in the '{param}' parameter"
 BMCREMEDY_NON_NEG_NON_ZERO_INT_MSG = "Please provide a valid non-zero positive integer value in '{param}' parameter"
 BMCREMEDY_NON_NEG_INT_MSG = "Please provide a valid non-negative integer value in the '{param}' parameter"
 
-BMCREMEDY_STATE_FILE_CORRUPT_ERR = ("Error occurred while loading the state file due to its unexpected format. "
+BMCREMEDY_STATE_FILE_CORRUPT_ERROR = ("Error occurred while loading the state file due to its unexpected format. "
                                     "Resetting the state file with the default format. Please try again")
-BMCREMEDY_FIELDS_PARAM_ERR_MSG = ("Please provide JSON formatted dictionary in the 'fields' action parameter "
+BMCREMEDY_FIELDS_PARAM_ERROR_MSG = ("Please provide JSON formatted dictionary in the 'fields' action parameter "
                                   "e.g: {\"First_Name\": \"Customer First Name\", \"Last_Name\": \"Customer Last Name\", "
                                   "\"Description\": \"Incident Description\", \"Service_Type\": \"User Service Restoration\", "
                                   "\"Reported Source\": \"Direct Input\", \"Status\": \"Assigned\", "

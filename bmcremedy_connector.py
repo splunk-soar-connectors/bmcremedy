@@ -99,7 +99,7 @@ class BmcremedyConnector(BaseConnector):
         try:
             state = self._decrypt_state(state, self.get_asset_id())
         except Exception as e:
-            self.error_print(consts.BMCREMEDY_DECRYPTION_ERR, e)
+            self.error_print(consts.BMCREMEDY_DECRYPTION_ERROR, e)
             state = None
 
         return state
@@ -114,7 +114,7 @@ class BmcremedyConnector(BaseConnector):
         try:
             state = self._encrypt_state(state, self.get_asset_id())
         except Exception as e:
-            self.error_print(consts.BMCREMEDY_ENCRYPTION_ERR, e)
+            self.error_print(consts.BMCREMEDY_ENCRYPTION_ERROR, e)
             return phantom.APP_ERROR
 
         return super().save_state(state)
@@ -138,7 +138,7 @@ class BmcremedyConnector(BaseConnector):
         # Load any saved configurations
         self._state = self.load_state()
         if self._state is None:
-            return self.set_status(phantom.APP_ERROR, consts.BMCREMEDY_STATE_FILE_CORRUPT_ERR)
+            return self.set_status(phantom.APP_ERROR, consts.BMCREMEDY_STATE_FILE_CORRUPT_ERROR)
         # Return response_status
         return phantom.APP_SUCCESS
 
@@ -174,7 +174,7 @@ class BmcremedyConnector(BaseConnector):
         :return: error message
         """
         error_code = None
-        error_msg = consts.ERR_MSG_UNAVAILABLE
+        error_msg = consts.BMCREMEDY_ERROR_MSG_UNAVAILABLE
 
         self.error_print("Error occurred:", e)
 
@@ -299,10 +299,10 @@ class BmcremedyConnector(BaseConnector):
 
         attachment_list = [value.strip() for value in attachment_list.split(',') if value.strip()]
         if not attachment_list:
-            self.debug_print(consts.BMCREMEDY_ERR_INVALID_FIELDS.format(field='vault_id'))
+            self.debug_print(consts.BMCREMEDY_ERROR_INVALID_FIELDS.format(field='vault_id'))
             return action_result.set_status(
                 phantom.APP_ERROR,
-                consts.BMCREMEDY_ERR_INVALID_FIELDS.format(field='vault_id')
+                consts.BMCREMEDY_ERROR_INVALID_FIELDS.format(field='vault_id')
             ), None, None
 
         # At most, three attachments should be provided
@@ -480,7 +480,7 @@ class BmcremedyConnector(BaseConnector):
         try:
             request_func = getattr(requests, method)
         except AttributeError:
-            self.error_print(consts.BMCREMEDY_ERR_API_UNSUPPORTED_METHOD.format(method=method))
+            self.error_print(consts.BMCREMEDY_ERROR_API_UNSUPPORTED_METHOD.format(method=method))
             # Set the action_result status to error, the handler function will most probably return as is
             return RetVal3(action_result.set_status(phantom.APP_ERROR), response_data, response)
         except Exception as e:
@@ -505,7 +505,7 @@ class BmcremedyConnector(BaseConnector):
             error_msg = self._get_error_message_from_exception(error)
             self.error_print(consts.BMCREMEDY_REST_CALL_ERROR.format(error=error_msg))
             # Set the action_result status to error, the handler function will most probably return as is
-            action_result_error_msg = "{}. {}".format(consts.BMCREMEDY_ERR_SERVER_CONNECTION, error_msg)
+            action_result_error_msg = "{}. {}".format(consts.BMCREMEDY_ERROR_SERVER_CONNECTION, error_msg)
             return RetVal3(action_result.set_status(phantom.APP_ERROR, action_result_error_msg), response_data, response)
 
         # Process an HTML response, Do this no matter what the api talks.
@@ -517,7 +517,7 @@ class BmcremedyConnector(BaseConnector):
             return RetVal3(action_result.set_status(phantom.APP_ERROR, response_message), response_data, response)
 
         if response.status_code in consts.ERROR_RESPONSE_DICT:
-            self.debug_print(consts.BMCREMEDY_ERR_FROM_SERVER.format(status=response.status_code,
+            self.debug_print(consts.BMCREMEDY_ERROR_FROM_SERVER.format(status=response.status_code,
                                                                      detail=consts.ERROR_RESPONSE_DICT[response.status_code]))
 
             response_data = {"content": response.content, "headers": response.headers}
@@ -538,12 +538,12 @@ class BmcremedyConnector(BaseConnector):
                         message_text, message_appended_text
                     )
                 except:
-                    response_message = consts.BMCREMEDY_ERR_JSON_PARSE.format(raw_text=response.text)
+                    response_message = consts.BMCREMEDY_ERROR_JSON_PARSE.format(raw_text=response.text)
                     self.debug_print(response_message)
 
             # Set the action_result status to error, the handler function will most probably return as is
             action_result_error_msg = "{}. {}".format(
-                consts.BMCREMEDY_ERR_FROM_SERVER.format(
+                consts.BMCREMEDY_ERROR_FROM_SERVER.format(
                     status=response.status_code,
                     detail=consts.ERROR_RESPONSE_DICT[response.status_code]
                 ),
@@ -560,7 +560,7 @@ class BmcremedyConnector(BaseConnector):
                 response_data = {"content": response.content, "headers": response.headers}
         except:
             # response.text is guaranteed to be NON None, it will be empty, but not None
-            msg_string = consts.BMCREMEDY_ERR_JSON_PARSE.format(raw_text=response.text)
+            msg_string = consts.BMCREMEDY_ERROR_JSON_PARSE.format(raw_text=response.text)
             self.debug_print(msg_string)
             # Set the action_result status to error, the handler function will most probably return as is
             return RetVal3(action_result.set_status(phantom.APP_ERROR, msg_string), response_data, response)
@@ -570,7 +570,7 @@ class BmcremedyConnector(BaseConnector):
 
         # See if an error message is present
         message = response_data.get('message', consts.BMCREMEDY_REST_RESP_OTHER_ERROR_MSG)
-        error_message = consts.BMCREMEDY_ERR_FROM_SERVER.format(status=response.status_code, detail=message)
+        error_message = consts.BMCREMEDY_ERROR_FROM_SERVER.format(status=response.status_code, detail=message)
         self.debug_print(error_message)
 
         # Set the action_result status to error, the handler function will most probably return as is
@@ -620,7 +620,7 @@ class BmcremedyConnector(BaseConnector):
         try:
             fields_param = json.loads(fields_param)
             if isinstance(fields_param, list):
-                return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_FIELDS_PARAM_ERR_MSG)
+                return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_FIELDS_PARAM_ERROR_MSG)
         except Exception as e:
             error_msg = self._get_error_message_from_exception(e)
             self.error_print(consts.BMCREMEDY_JSON_LOADS_ERROR.format(error_msg))
@@ -728,7 +728,7 @@ class BmcremedyConnector(BaseConnector):
         try:
             fields_param = json.loads(param.get(consts.BMCREMEDY_JSON_FIELDS, '{}'))
             if isinstance(fields_param, list):
-                return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_FIELDS_PARAM_ERR_MSG)
+                return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_FIELDS_PARAM_ERROR_MSG)
         except Exception as e:
             msg = self._get_error_message_from_exception(e)
             self.error_print(consts.BMCREMEDY_JSON_LOADS_ERROR.format(msg))
