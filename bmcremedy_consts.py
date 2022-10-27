@@ -126,3 +126,6 @@ SUCCESS_RESPONSE_CODES = [BMCREMEDY_REST_RESP_TOKEN_SUCCESS, BMCREMEDY_REST_RESP
 
 # List of parameters that will be considered for adding attachment to an incident
 ADD_ATTACHMENT_PARAMS_LIST = ["Work Log Type", "View Access", "Secure Work Log", "Detailed Description"]
+
+# Timeout
+BMCREMEDY_DEFAULT_TIMEOUT = 30

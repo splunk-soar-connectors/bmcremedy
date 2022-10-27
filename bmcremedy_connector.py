@@ -492,10 +492,10 @@ class BmcremedyConnector(BaseConnector):
         try:
             if files:
                 response = request_func('{}{}'.format(self._base_url, endpoint), headers=headers, files=files,
-                                    verify=self._verify_server_cert)
+                                    verify=self._verify_server_cert, timeout=consts.BMCREMEDY_DEFAULT_TIMEOUT)
             else:
                 response = request_func('{}{}'.format(self._base_url, endpoint), headers=headers, data=data, params=params,
-                                        verify=self._verify_server_cert)
+                                        verify=self._verify_server_cert, timeout=consts.BMCREMEDY_DEFAULT_TIMEOUT)
         except requests.exceptions.ConnectionError as e:
             self._get_error_message_from_exception(e)
             error_msg = "Error connecting to server. Connection refused from server for {}".format(
