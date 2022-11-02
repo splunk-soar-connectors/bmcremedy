@@ -332,8 +332,8 @@ class BmcremedyConnector(BaseConnector):
                         "{}: {}".format(consts.BMCREMEDY_UNKNOWN_VAULT_ID, vault_id)
                     ), None, None
         except Exception as e:
-            err_msg = self._get_error_message_from_exception(e)
-            return action_result.set_status(phantom.APP_ERROR, err_msg), None, None
+            err_message = self._get_error_message_from_exception(e)
+            return action_result.set_status(phantom.APP_ERROR, err_message), None, None
 
         for index, value in enumerate(file_obj):
             add_attachment_params_dict['z2AF Work Log0{}'.format(index + 1)] = filename[index]
@@ -484,10 +484,10 @@ class BmcremedyConnector(BaseConnector):
             # Set the action_result status to error, the handler function will most probably return as is
             return RetVal3(action_result.set_status(phantom.APP_ERROR), response_data, response)
         except Exception as e:
-            error_msg = "{}. {}".format(consts.BMCREMEDY_EXCEPTION_OCCURRED, self._get_error_message_from_exception(e))
-            self.error_print(error_msg)
+            error_message = "{}. {}".format(consts.BMCREMEDY_EXCEPTION_OCCURRED, self._get_error_message_from_exception(e))
+            self.error_print(error_message)
             # Set the action_result status to error, the handler function will most probably return as is
-            return RetVal3(action_result.set_status(phantom.APP_ERROR, error_msg), response_data, response)
+            return RetVal3(action_result.set_status(phantom.APP_ERROR, error_message), response_data, response)
 
         try:
             if files:
@@ -502,10 +502,10 @@ class BmcremedyConnector(BaseConnector):
                 '{}{}'.format(self._base_url, endpoint))
             return RetVal3(action_result.set_status(phantom.APP_ERROR, error_msg), response_data, response)
         except Exception as error:
-            error_msg = self._get_error_message_from_exception(error)
-            self.error_print(consts.BMCREMEDY_REST_CALL_ERROR.format(error=error_msg))
+            error_message = self._get_error_message_from_exception(error)
+            self.error_print(consts.BMCREMEDY_REST_CALL_ERROR.format(error=error_message))
             # Set the action_result status to error, the handler function will most probably return as is
-            action_result_error_msg = "{}. {}".format(consts.BMCREMEDY_ERROR_SERVER_CONNECTION, error_msg)
+            action_result_error_msg = "{}. {}".format(consts.BMCREMEDY_ERROR_SERVER_CONNECTIVITY, error_message)
             return RetVal3(action_result.set_status(phantom.APP_ERROR, action_result_error_msg), response_data, response)
 
         # Process an HTML response, Do this no matter what the api talks.
@@ -622,9 +622,9 @@ class BmcremedyConnector(BaseConnector):
             if isinstance(fields_param, list):
                 return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_FIELDS_PARAM_ERROR_MSG)
         except Exception as e:
-            error_msg = self._get_error_message_from_exception(e)
-            self.error_print(consts.BMCREMEDY_JSON_LOADS_ERROR.format(error_msg))
-            return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_JSON_LOADS_ERROR.format(error_msg))
+            error_message = self._get_error_message_from_exception(e)
+            self.error_print(consts.BMCREMEDY_JSON_LOADS_ERROR.format(error_message))
+            return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_JSON_LOADS_ERROR.format(error_message))
 
         attachment_list = param.get(consts.BMCREMEDY_JSON_VAULT_ID, '')
 
@@ -687,8 +687,8 @@ class BmcremedyConnector(BaseConnector):
             summary_data["incident_id"] = incident_response_data.get("values", {})["Incident Number"]
 
         except Exception as e:
-            error_msg = self._get_error_message_from_exception(e)
-            self.error_print("Error while summarizing data: {}".format(error_msg))
+            error_message = self._get_error_message_from_exception(e)
+            self.error_print("Error while summarizing data: {}".format(error_message))
             return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_SUMMARY_ERROR.format(
                 action_name="create_ticket"))
 
