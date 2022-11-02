@@ -84,8 +84,8 @@ BMCREMEDY_REST_CALL_ERROR = "Exception while making request: {error}"
 BMCREMEDY_JSON_STATUS = "status"
 BMCREMEDY_BLANK_PARAM_ERROR_SUBSTRING = "records have been found for the Incident contact information you have provided"
 BMCREMEDY_CUSTOM_ERROR_MSG = "\nThis can happen if required parameters are not specified in the action.\n"
-BMCREMEDY_ADD_COMMENT_MESSAGE = "Comment added successfully"
-BMCREMEDY_SET_STATUS_MESSAGE = "Set status successful"
+BMCREMEDY_ADD_COMMENT_MSG = "Comment added successfully"
+BMCREMEDY_SET_STATUS_MSG = "Set status successful"
 BMCREMEDY_UPDATE_SUCCESSFUL_MSG = "Incident updated successfully"
 BMCREMEDY_GET_COMMENT_ERROR = "Error while getting comments for incident ID: {id}"
 BMCREMEDY_ERROR_INVALID_FIELDS = "Please provide a valid value in the '{field}' parameter"
@@ -94,7 +94,7 @@ BMCREMEDY_DECRYPTION_ERROR = "Error occurred while decrypting the state file"
 
 # Constants relating to 'get_error_message_from_exception'
 BMCREMEDY_ERROR_CODE_MSG = "Error code unavailable"
-BMCREMEDY_ERROR_MSG_UNAVAILABLE = "Error message unavailable. Please check the asset configuration and|or action parameters."
+BMCREMEDY_ERROR_UNAVAILABLE_MSG = "Error message unavailable. Please check the asset configuration and|or action parameters."
 BMCREMEDY_PARSE_ERROR_MSG = "Unable to parse the error message. Please check the asset configuration and|or action parameters."
 
 # Constants relating to 'validate_integer'

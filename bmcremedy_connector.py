@@ -174,7 +174,7 @@ class BmcremedyConnector(BaseConnector):
         :return: error message
         """
         error_code = None
-        error_msg = consts.BMCREMEDY_ERROR_MSG_UNAVAILABLE
+        error_msg = consts.BMCREMEDY_ERROR_UNAVAILABLE_MSG
 
         self.error_print("Error occurred:", e)
 
@@ -973,7 +973,7 @@ class BmcremedyConnector(BaseConnector):
         if phantom.is_fail(response_status):
             return action_result.get_status()
 
-        return action_result.set_status(phantom.APP_SUCCESS, consts.BMCREMEDY_SET_STATUS_MESSAGE)
+        return action_result.set_status(phantom.APP_SUCCESS, consts.BMCREMEDY_SET_STATUS_MSG)
 
     def _add_comment(self, param):
         """ This function is used to add comment/work log to an incident.
@@ -1020,7 +1020,7 @@ class BmcremedyConnector(BaseConnector):
         if phantom.is_fail(add_attachment_status):
             return action_result.get_status()
 
-        return action_result.set_status(phantom.APP_SUCCESS, consts.BMCREMEDY_ADD_COMMENT_MESSAGE)
+        return action_result.set_status(phantom.APP_SUCCESS, consts.BMCREMEDY_ADD_COMMENT_MSG)
 
     def handle_action(self, param):
         """ This function gets current action identifier and calls member function of it's own to handle the action.
