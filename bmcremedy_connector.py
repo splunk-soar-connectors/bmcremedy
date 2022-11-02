@@ -505,8 +505,8 @@ class BmcremedyConnector(BaseConnector):
             error_message = self._get_error_message_from_exception(error)
             self.error_print(consts.BMCREMEDY_REST_CALL_ERROR.format(error=error_message))
             # Set the action_result status to error, the handler function will most probably return as is
-            action_result_error_msg = "{}. {}".format(consts.BMCREMEDY_ERROR_SERVER_CONNECTIVITY, error_message)
-            return RetVal3(action_result.set_status(phantom.APP_ERROR, action_result_error_msg), response_data, response)
+            action_result_error_message = "{}. {}".format(consts.BMCREMEDY_ERROR_SERVER_CONNECTIVITY, error_message)
+            return RetVal3(action_result.set_status(phantom.APP_ERROR, action_result_error_message), response_data, response)
 
         # Process an HTML response, Do this no matter what the api talks.
         # There is a high chance of a PROXY in between phantom and the rest of
