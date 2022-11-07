@@ -18,7 +18,7 @@
     "logo": "logo_bmcremedy.svg",
     "logo_dark": "logo_bmcremedy_dark.svg",
     "latest_tested_versions": [
-        "On-Prem, BMC Remedy ITSM version 20.02, Oct 29,2021"
+        "On-Prem, BMC Remedy ITSM version 20.02, Oct 31,2022"
     ],
     "configuration": {
         "url": {
@@ -3328,10 +3328,10 @@
                 },
                 {
                     "data_path": "action_result.parameter.secure_work_log",
-                    "data_type": "boolean",
+                    "data_type": "string",
                     "example_values": [
-                        false,
-                        true
+                        "Yes",
+                        "No"
                     ]
                 },
                 {
