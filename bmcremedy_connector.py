@@ -332,8 +332,8 @@ class BmcremedyConnector(BaseConnector):
                         "{}: {}".format(consts.BMCREMEDY_UNKNOWN_VAULT_ID, vault_id)
                     ), None, None
         except Exception as e:
-            err_message = self._get_error_message_from_exception(e)
-            return action_result.set_status(phantom.APP_ERROR, err_message), None, None
+            error_message = self._get_error_message_from_exception(e)
+            return action_result.set_status(phantom.APP_ERROR, error_message), None, None
 
         for index, value in enumerate(file_obj):
             add_attachment_params_dict['z2AF Work Log0{}'.format(index + 1)] = filename[index]
@@ -396,8 +396,8 @@ class BmcremedyConnector(BaseConnector):
                 url = re.findall("(?:/api).*", url)[0]
 
         except Exception as e:
-            msg = self._get_error_message_from_exception(e)
-            self.error_print(consts.BMCREMEDY_ERROR_FETCHING_URL.format(error=msg))
+            message = self._get_error_message_from_exception(e)
+            self.error_print(consts.BMCREMEDY_ERROR_FETCHING_URL.format(error=message))
             return phantom.APP_ERROR, None
 
         return phantom.APP_SUCCESS, url
@@ -730,8 +730,8 @@ class BmcremedyConnector(BaseConnector):
             if isinstance(fields_param, list):
                 return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_FIELDS_PARAM_ERROR_MSG)
         except Exception as e:
-            msg = self._get_error_message_from_exception(e)
-            self.error_print(consts.BMCREMEDY_JSON_LOADS_ERROR.format(msg))
+            message = self._get_error_message_from_exception(e)
+            self.error_print(consts.BMCREMEDY_JSON_LOADS_ERROR.format(message))
             return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_JSON_LOADS_ERROR.format(e))
 
         incident_number = fields_param.get("Incident Number", param[consts.BMCREMEDY_INCIDENT_NUMBER])
