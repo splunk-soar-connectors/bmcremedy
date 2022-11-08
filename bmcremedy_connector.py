@@ -496,6 +496,12 @@ class BmcremedyConnector(BaseConnector):
             else:
                 response = request_func('{}{}'.format(self._base_url, endpoint), headers=headers, data=data, params=params,
                                         verify=self._verify_server_cert, timeout=consts.BMCREMEDY_DEFAULT_TIMEOUT)
+
+        except requests.exceptions.ProxyError as e:
+            error = self._get_error_message_from_exception(e)
+            action_result_error_message = "Proxy connection failed:  {}".format(error)
+            return RetVal3(action_result.set_status(phantom.APP_ERROR, action_result_error_message), response_data, response)
+
         except requests.exceptions.ConnectionError as e:
             self._get_error_message_from_exception(e)
             error_msg = "Error connecting to server. Connection refused from server for {}".format(
