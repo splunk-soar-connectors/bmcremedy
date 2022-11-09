@@ -174,7 +174,7 @@ class BmcremedyConnector(BaseConnector):
         :return: error message
         """
         error_code = None
-        error_msg = consts.BMCREMEDY_ERROR_UNAVAILABLE_MSG
+        error_msg = consts.BMCREMEDY_ERROR_UNAVAILABLE_MESSAGE
 
         self.error_print("Error occurred:", e)
 
@@ -208,18 +208,18 @@ class BmcremedyConnector(BaseConnector):
         if parameter is not None:
             try:
                 if not float(parameter).is_integer():
-                    return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_VALID_INT_MSG.format(param=key)), None
+                    return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_VALID_INT_MESSAGE.format(param=key)), None
 
                 parameter = int(parameter)
             except:
-                return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_VALID_INT_MSG.format(param=key)), None
+                return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_VALID_INT_MESSAGE.format(param=key)), None
 
             if parameter < 0:
-                return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_NON_NEG_INT_MSG.format(param=key)), None
+                return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_NON_NEG_INT_MESSAGE.format(param=key)), None
             if not allow_zero and parameter == 0:
                 return action_result.set_status(
                     phantom.APP_ERROR,
-                    consts.BMCREMEDY_NON_NEG_NON_ZERO_INT_MSG.format(param=key)
+                    consts.BMCREMEDY_NON_NEG_NON_ZERO_INT_MESSAGE.format(param=key)
                 ), None
 
         return phantom.APP_SUCCESS, parameter
@@ -269,8 +269,8 @@ class BmcremedyConnector(BaseConnector):
             return action_result.get_status()
 
         if not response_dict:
-            self.debug_print(consts.BMCREMEDY_TOKEN_GENERATION_ERROR_MSG)
-            return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_TOKEN_GENERATION_ERROR_MSG)
+            self.debug_print(consts.BMCREMEDY_TOKEN_GENERATION_ERROR_MESSAGE)
+            return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_TOKEN_GENERATION_ERROR_MESSAGE)
 
         # check the header for any message that denote a failure
         ret_val = self._check_login_status(action_result, response)
@@ -534,7 +534,7 @@ class BmcremedyConnector(BaseConnector):
                 try:
                     content_dict = json.loads(response_data.get("content"))[0]
                     if consts.BMCREMEDY_BLANK_PARAM_ERROR_SUBSTRING in content_dict.get('messageAppendedText'):
-                        custom_error_message = consts.BMCREMEDY_CUSTOM_ERROR_MSG
+                        custom_error_message = consts.BMCREMEDY_CUSTOM_ERROR_MESSAGE
 
                     message_text = content_dict.get('messageText')
                     message_appended_text = content_dict.get('messageAppendedText')
@@ -575,7 +575,7 @@ class BmcremedyConnector(BaseConnector):
             return RetVal3(action_result.set_status(phantom.APP_SUCCESS), response_data, response)
 
         # See if an error message is present
-        message = response_data.get('message', consts.BMCREMEDY_REST_RESP_OTHER_ERROR_MSG)
+        message = response_data.get('message', consts.BMCREMEDY_REST_RESP_OTHER_ERROR_MESSAGE)
         error_message = consts.BMCREMEDY_ERROR_FROM_SERVER.format(status=response.status_code, detail=message)
         self.debug_print(error_message)
 
@@ -590,7 +590,7 @@ class BmcremedyConnector(BaseConnector):
         """
 
         action_result = self.add_action_result(ActionResult(dict(param)))
-        self.save_progress(consts.BMCREMEDY_TEST_CONNECTIVITY_MSG)
+        self.save_progress(consts.BMCREMEDY_TEST_CONNECTIVITY_MESSAGE)
         self.save_progress("Configured URL: {}".format(self._base_url))
 
         response_status = self._generate_api_token(action_result)
@@ -626,7 +626,7 @@ class BmcremedyConnector(BaseConnector):
         try:
             fields_param = json.loads(fields_param)
             if isinstance(fields_param, list):
-                return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_FIELDS_PARAM_ERROR_MSG)
+                return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_FIELDS_PARAM_ERROR_MESSAGE)
         except Exception as e:
             error_message = self._get_error_message_from_exception(e)
             self.error_print(consts.BMCREMEDY_JSON_LOADS_ERROR.format(error_message))
@@ -734,7 +734,7 @@ class BmcremedyConnector(BaseConnector):
         try:
             fields_param = json.loads(param.get(consts.BMCREMEDY_JSON_FIELDS, '{}'))
             if isinstance(fields_param, list):
-                return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_FIELDS_PARAM_ERROR_MSG)
+                return action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_FIELDS_PARAM_ERROR_MESSAGE)
         except Exception as e:
             message = self._get_error_message_from_exception(e)
             self.error_print(consts.BMCREMEDY_JSON_LOADS_ERROR.format(message))
@@ -800,7 +800,7 @@ class BmcremedyConnector(BaseConnector):
             if phantom.is_fail(add_attachment_status):
                 return action_result.get_status()
 
-        return action_result.set_status(phantom.APP_SUCCESS, consts.BMCREMEDY_UPDATE_SUCCESSFUL_MSG)
+        return action_result.set_status(phantom.APP_SUCCESS, consts.BMCREMEDY_UPDATE_SUCCESSFUL_MESSAGE)
 
     def _get_ticket(self, param):
         """ Get information for the incident ID provided.
@@ -979,7 +979,7 @@ class BmcremedyConnector(BaseConnector):
         if phantom.is_fail(response_status):
             return action_result.get_status()
 
-        return action_result.set_status(phantom.APP_SUCCESS, consts.BMCREMEDY_SET_STATUS_MSG)
+        return action_result.set_status(phantom.APP_SUCCESS, consts.BMCREMEDY_SET_STATUS_MESSAGE)
 
     def _add_comment(self, param):
         """ This function is used to add comment/work log to an incident.
@@ -1026,7 +1026,7 @@ class BmcremedyConnector(BaseConnector):
         if phantom.is_fail(add_attachment_status):
             return action_result.get_status()
 
-        return action_result.set_status(phantom.APP_SUCCESS, consts.BMCREMEDY_ADD_COMMENT_MSG)
+        return action_result.set_status(phantom.APP_SUCCESS, consts.BMCREMEDY_ADD_COMMENT_MESSAGE)
 
     def handle_action(self, param):
         """ This function gets current action identifier and calls member function of it's own to handle the action.
