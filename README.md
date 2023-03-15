@@ -39,7 +39,7 @@ Incidents are typically categorized among following types:
 ## Playbook Backward Compatibility
 
 -   A new action parameter has been added in the existing action. Hence, it is requested to the
-    end-user to please update their existing playbooks by re-inserting \| modifying \| deleting the
+    end-user to please update their existing playbooks by re-inserting | modifying | deleting the
     corresponding action blocks.
 
       
@@ -47,8 +47,8 @@ Incidents are typically categorized among following types:
     -   A 'offset' action parameter has been added in the 'list tickets' action
 
 -   The existing output data paths have been modified for the 'list tickets' action. Hence, it is
-    requested to the end-user to please update their existing playbooks by re-inserting \| modifying
-    \| deleting the corresponding action blocks to ensure the correct functioning of the playbooks
+    requested to the end-user to please update their existing playbooks by re-inserting | modifying
+    | deleting the corresponding action blocks to ensure the correct functioning of the playbooks
     created on the earlier versions of the app.
 
 ## Using a template for the create ticket action
