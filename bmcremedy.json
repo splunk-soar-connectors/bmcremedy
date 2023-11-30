@@ -4,7 +4,7 @@
     "description": "This app supports ticket management functions on incidents in BMC Remedy",
     "publisher": "Splunk",
     "package_name": "phantom_bmcremedy",
-    "license": "Copyright (c) 2017-2022 Splunk Inc.",
+    "license": "Copyright (c) 2017-2023 Splunk Inc.",
     "main_module": "bmcremedy_connector.py",
     "type": "ticketing",
     "app_version": "2.1.1",
@@ -18,7 +18,7 @@
     "logo": "logo_bmcremedy.svg",
     "logo_dark": "logo_bmcremedy_dark.svg",
     "latest_tested_versions": [
-        "On-Prem, BMC Remedy ITSM version 20.02, Oct 31,2022"
+        "On-Prem, BMC Remedy ITSM version 20.02, Oct 31,2023"
     ],
     "configuration": {
         "url": {
