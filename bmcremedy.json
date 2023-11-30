@@ -18,7 +18,7 @@
     "logo": "logo_bmcremedy.svg",
     "logo_dark": "logo_bmcremedy_dark.svg",
     "latest_tested_versions": [
-        "On-Prem, BMC Remedy ITSM version 20.02, Oct 31,2023"
+        "On-Prem, BMC Remedy ITSM version 20.02, Nov 29,2023"
     ],
     "configuration": {
         "url": {
