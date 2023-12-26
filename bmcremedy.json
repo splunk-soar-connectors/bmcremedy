@@ -23,7 +23,7 @@
     ],
     "configuration": {
         "url": {
-            "description": "Complete URL (e.g. http://mybmc.contoso.com)",
+            "description": "Base URL without port (e.g. http://mybmc.contoso.com)",
             "data_type": "string",
             "order": 0,
             "required": true

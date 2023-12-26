@@ -122,8 +122,7 @@ class BmcremedyConnector(BaseConnector):
         #     }
         #     return state
         try:
-            # state = self._decrypt_state(state, self.get_asset_id())
-            pass
+            state = self._decrypt_state(state, self.get_asset_id())
         except Exception as e:
             self.error_print(consts.BMCREMEDY_DECRYPTION_ERROR, e)
             state = None
@@ -138,8 +137,7 @@ class BmcremedyConnector(BaseConnector):
         :return: status
         """
         try:
-            # state = self._encrypt_state(state, self.get_asset_id())
-            pass
+            state = self._encrypt_state(state, self.get_asset_id())
         except Exception as e:
             self.error_print(consts.BMCREMEDY_ENCRYPTION_ERROR, e)
             return phantom.APP_ERROR
