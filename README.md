@@ -122,7 +122,7 @@ The below configuration variables are required for this Connector to operate.  T
 
 VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
-**url** |  required  | string | Complete URL (e.g. http://mybmc.contoso.com)
+**url** |  required  | string | Base URL without port (e.g. http://mybmc.contoso.com)
 **verify_server_cert** |  optional  | boolean | Verify server certificate
 **username** |  optional  | string | Username
 **password** |  optional  | password | Password
