@@ -472,7 +472,7 @@ class BmcremedyConnector(BaseConnector):
 
     def _bmc_int_auth_refresh(self, action_result):
 
-        self.debug_print("Refreshing access token using refresh token...")
+        self.debug_print("In bmc_int_auth_refresh method")
 
         config = self.get_config()
         client_id, client_secret = config.get('client_id'), config.get('client_secret')
@@ -559,7 +559,6 @@ class BmcremedyConnector(BaseConnector):
 
         # If token is invalid in case of API call, generate new token and retry
         if str(consts.BMCREMEDY_REST_RESP_UNAUTHORIZED) in str(intermediate_action_result.get_message()):
-            self.debug_print(f"Token is invalid. Generating new token and retrying... ---> {str(intermediate_action_result.get_message())}")
             oauth_token = self._state.get('oauth_token', {})
             is_oauth_token = oauth_token and oauth_token.get("access_token") and oauth_token.get("refresh_token")
             if self.auth_type == consts.BMCREMEDY_OAUTH and is_oauth_token:
@@ -624,7 +623,7 @@ class BmcremedyConnector(BaseConnector):
                                     verify=self._verify_server_cert, timeout=consts.BMCREMEDY_DEFAULT_TIMEOUT)
             else:
                 response = request_func('{}{}'.format(self._base_url, endpoint), headers=headers, data=data, params=params,
-                                        verify=self._verify_server_cert, timeout=consts.BMCREMEDY_DEFAULT_TIMEOUT)
+                                        verify=self._verify_server_cert)
 
         except requests.exceptions.ProxyError as e:
             error = self._get_error_message_from_exception(e)
@@ -693,23 +692,24 @@ class BmcremedyConnector(BaseConnector):
                 response_data = response.json()
             else:
                 response_data = {"content": response.content, "headers": response.headers}
+
+            if response.status_code in consts.SUCCESS_RESPONSE_CODES:
+                return RetVal3(action_result.set_status(phantom.APP_SUCCESS), response_data, response)
+
+            # See if an error message is present
+            message = response_data.get('message', consts.BMCREMEDY_REST_RESP_OTHER_ERROR_MESSAGE)
+            error_message = consts.BMCREMEDY_ERROR_FROM_SERVER.format(status=response.status_code, detail=message)
+            self.debug_print(error_message)
+
+            # Set the action_result status to error, the handler function will most probably return as is
+            return RetVal3(action_result.set_status(phantom.APP_ERROR, error_message), response_data, response)
+
         except Exception:
             # response.text is guaranteed to be NON None, it will be empty, but not None
             msg_string = consts.BMCREMEDY_ERROR_JSON_PARSE.format(raw_text=response.text)
             self.debug_print(msg_string)
             # Set the action_result status to error, the handler function will most probably return as is
             return RetVal3(action_result.set_status(phantom.APP_ERROR, msg_string), response_data, response)
-
-        if response.status_code in consts.SUCCESS_RESPONSE_CODES:
-            return RetVal3(action_result.set_status(phantom.APP_SUCCESS), response_data, response)
-
-        # See if an error message is present
-        message = response_data.get('message', consts.BMCREMEDY_REST_RESP_OTHER_ERROR_MESSAGE)
-        error_message = consts.BMCREMEDY_ERROR_FROM_SERVER.format(status=response.status_code, detail=message)
-        self.debug_print(error_message)
-
-        # Set the action_result status to error, the handler function will most probably return as is
-        return RetVal3(action_result.set_status(phantom.APP_ERROR, error_message), response_data, response)
 
     def _reset_the_state(self):
         self.debug_print("Resetting the state file")
@@ -781,6 +781,8 @@ class BmcremedyConnector(BaseConnector):
         return phantom.APP_SUCCESS, url_to_app_rest
 
     def _bmc_int_auth_initial(self, client_id, client_secret):
+
+        self.debug_print("In bmc_int_auth_initial method")
 
         state = self.rsh.load_state()
         asset_id = self.get_asset_id()
@@ -855,7 +857,6 @@ class BmcremedyConnector(BaseConnector):
             return None, "ERROR: {0} is a required parameter for BMC Authentication.\
                  please specify one.".format(consts.BMCREMEDY_CONFIG_CLIENT_SECRET)
 
-        self.debug_print("Try to generate token from authorization code")
         return self._bmc_int_auth_initial(client_id, client_secret)
 
     def _set_auth_method(self, action_result):
