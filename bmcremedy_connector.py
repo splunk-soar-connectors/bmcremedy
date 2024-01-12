@@ -200,8 +200,9 @@ class BmcremedyConnector(BaseConnector):
         else:
             self._base_url += f':{config.get("ports").split(",")[0].strip()}'
 
-        self.is_oauth_token_exist = self.auth_type in [consts.BMCREMEDY_OAUTH] and \
-            not self._state.get("oauth_token", {}).get("access_token")
+        self.is_oauth_token_not_exist = self.auth_type == consts.BMCREMEDY_OAUTH and \
+            (not self._state.get("oauth_token", {}).get("access_token", False)) and \
+                (not self._state.get("oauth_token", {}).get("refresh_token", False))
         self._is_client_id_changed = (self._state.get(consts.BMCREMEDY_CONFIG_CLIENT_ID) and config.get(consts.BMCREMEDY_CONFIG_CLIENT_ID)) and \
             self._state.get(consts.BMCREMEDY_CONFIG_CLIENT_ID) != config.get(consts.BMCREMEDY_CONFIG_CLIENT_ID)
 
@@ -518,7 +519,7 @@ class BmcremedyConnector(BaseConnector):
             return None, "Error retrieving OAuth Token. Exception - {}".format(str(e))
 
         self._state['oauth_token'] = oauth_token
-        return phantom.APP_SUCCESS, "Success fully refreshed access token"
+        return phantom.APP_SUCCESS, "Successfully refreshed access token"
 
     def _make_rest_call_abstract(self, endpoint, action_result, data=None, params=None, method="post",
                                  accept_headers=None, files=None):
@@ -542,6 +543,10 @@ class BmcremedyConnector(BaseConnector):
         headers = {}
         # Prepare request headers
         if self.auth_type == consts.BMCREMEDY_OAUTH:
+            if (not self._state.get("oauth_token", {}).get("access_token") and self._state.get("oauth_token", {}).get("refresh_token")):
+                ret_code, _ = self._bmc_int_auth_refresh(action_result)
+                if phantom.is_fail(ret_code):
+                    return action_result.get_status(), response_data
             headers = {"Authorization": "Bearer {}".format(self._state.get('oauth_token', {}).get('access_token'))}
         else:
             headers = {"Authorization": "AR-JWT {}".format(self._state.get('token'))}
@@ -1340,7 +1345,7 @@ class BmcremedyConnector(BaseConnector):
         action = self.get_action_identifier()
         action_execution_status = phantom.APP_SUCCESS
 
-        if self._is_client_id_changed or self.is_oauth_token_exist:
+        if self._is_client_id_changed or self.is_oauth_token_not_exist:
             if self.get_action_identifier() != phantom.ACTION_ID_TEST_ASSET_CONNECTIVITY:
                 self.save_progress("Please run the test connectivity first...")
                 return self.set_status(phantom.APP_ERROR, "Please run the test connectivity first...")
