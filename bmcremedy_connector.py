@@ -95,6 +95,7 @@ class BmcremedyConnector(BaseConnector):
         oauth_token = state.get("oauth_token")
         if token:
             state["token"] = encryption_helper.encrypt(token, salt)
+            state["is_encrypted"] = True
         if oauth_token:
             token_list = ['access_token', 'id_token', 'refresh_token']
             for token_name in token_list:
@@ -104,7 +105,7 @@ class BmcremedyConnector(BaseConnector):
                         salt
                     )
             state[consts.BMCREMEDY_CONFIG_CLIENT_ID] = self.get_config()[consts.BMCREMEDY_CONFIG_CLIENT_ID]
-        state["is_encrypted"] = True
+            state["is_encrypted"] = True
 
         return state
 
@@ -1348,6 +1349,7 @@ class BmcremedyConnector(BaseConnector):
         if self._is_client_id_changed or self.is_oauth_token_not_exist:
             if self.get_action_identifier() != phantom.ACTION_ID_TEST_ASSET_CONNECTIVITY:
                 self.save_progress("Please run the test connectivity first...")
+                self._reset_the_state()
                 return self.set_status(phantom.APP_ERROR, "Please run the test connectivity first...")
 
         if action in action_mapping.keys():
