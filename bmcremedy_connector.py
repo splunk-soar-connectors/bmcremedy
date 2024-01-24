@@ -822,9 +822,12 @@ class BmcremedyConnector(BaseConnector):
             'redirect_uri': app_rest_url,
             'state': asset_id
         }
-        url = requests.Request('GET', '{}/authorize'.format(request_url), params=params).prepare().url
-        url = '{}&'.format(url)
-
+        try:
+            url = requests.Request('GET', '{}/authorize'.format(request_url), params=params).prepare().url
+            url = '{}&'.format(url)
+        except Exception as e:
+            self.debug_print("Exception occured while getting code. Exception: {}".format(e))
+            return None, "Please specify the valid base URL. Error - {}".format(e)
         self.save_progress("To continue, open this link in a new tab in your browser")
         self.save_progress(url)
         for i in range(0, 60):
@@ -836,8 +839,10 @@ class BmcremedyConnector(BaseConnector):
                 break
             elif state.get('error'):
                 self._reset_the_state()
+                self.rsh.delete_state()
                 return None, "Error retrieving OAuth token connector"
         else:
+            self.rsh.delete_state()
             return None, "Timed out waiting for login"
 
         self._state['oauth_token'] = oauth_token
