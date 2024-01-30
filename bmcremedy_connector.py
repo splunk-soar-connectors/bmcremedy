@@ -180,9 +180,6 @@ class BmcremedyConnector(BaseConnector):
             for key in required_params:
                 if not config.get(key):
                     return self.set_status(phantom.APP_ERROR, consts.BMCREMEDY_REQUIRED_PARAM_BASIC.format(key))
-            if self.get_action_identifier() != phantom.ACTION_ID_TEST_ASSET_CONNECTIVITY:
-                if not self._state.get("token", False):
-                    return self.set_status(phantom.APP_ERROR, "Required tokens not found in state file. Please run test connectivity first...")
         elif self.auth_type == consts.BMCREMEDY_OAUTH:
             required_params = [consts.BMCREMEDY_CONFIG_CLIENT_ID, consts.BMCREMEDY_CONFIG_CLIENT_SECRET]
             for key in required_params:
@@ -550,6 +547,12 @@ class BmcremedyConnector(BaseConnector):
                     return action_result.get_status(), response_data
             headers = {"Authorization": "Bearer {}".format(self._state.get('oauth_token', {}).get('access_token'))}
         else:
+            if self.get_action_identifier() != phantom.ACTION_ID_TEST_ASSET_CONNECTIVITY:
+                if not self._state.get("token", False):
+                    # token_action_result = ActionResult()
+                    ret_code, response_data = self._generate_api_token(action_result)
+                    if phantom.is_fail(ret_code):
+                        return action_result.get_status(), response_data
             headers = {"Authorization": "AR-JWT {}".format(self._state.get('token'))}
 
         if not files and self.auth_type != consts.BMCREMEDY_OAUTH:
