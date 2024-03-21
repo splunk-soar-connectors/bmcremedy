@@ -555,7 +555,7 @@ class BmcremedyConnector(BaseConnector):
                         return action_result.get_status(), response_data
             headers = {"Authorization": "AR-JWT {}".format(self._state.get('token'))}
 
-        if not files and self.auth_type != consts.BMCREMEDY_OAUTH:
+        if not files:
             headers['Content-Type'] = 'application/json'
 
         # Updating headers if Content-Type is 'multipart/formdata'
@@ -585,6 +585,9 @@ class BmcremedyConnector(BaseConnector):
             else:
                 # Update headers with new token
                 headers["Authorization"] = "AR-JWT {}".format(self._state.get('token'))
+
+            if not files:
+                headers['Content-Type'] = 'application/json'
 
             # Retry the REST call with new token generated
             rest_ret_code, response_data, response = self._make_rest_call(endpoint, intermediate_action_result, headers=headers,
@@ -627,6 +630,8 @@ class BmcremedyConnector(BaseConnector):
             return RetVal3(action_result.set_status(phantom.APP_ERROR, error_message), response_data, response)
 
         try:
+            # BMC SDK want X-Requested-By header in every request for Protection against CSRF attack
+            headers["X-Requested-By"] = "XMLHttpRequest"
             if files:
                 response = request_func('{}{}'.format(self._base_url, endpoint), headers=headers, files=files,
                                     verify=self._verify_server_cert, timeout=consts.BMCREMEDY_DEFAULT_TIMEOUT)
