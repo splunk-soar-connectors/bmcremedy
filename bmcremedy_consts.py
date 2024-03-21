@@ -1,6 +1,6 @@
 # File: bmcremedy_consts.py
 #
-# Copyright (c) 2017-2023 Splunk Inc.
+# Copyright (c) 2017-2024 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,7 +17,12 @@
 BMCREMEDY_CONFIG_SERVER = "url"
 BMCREMEDY_CONFIG_API_USERNAME = "username"
 BMCREMEDY_CONFIG_API_PASSWORD = "password"  # pragma: allowlist secret
+BMCREMEDY_CONFIG_CLIENT_ID = "client_id"
+BMCREMEDY_CONFIG_CLIENT_SECRET = "client_secret"  # pragma: allowlist secret
+BMCREMEDY_BASIC = "Basic"
+BMCREMEDY_OAUTH = "BMC SSO (interactive)"
 BMCREMEDY_CONFIG_SERVER_CERT = "verify_server_cert"
+BMCREMEDY_CONFIG_AUTH_TYPE = "auth_type"
 BMCREMEDY_REST_RESP_TOKEN_SUCCESS = 200
 BMCREMEDY_REST_RESP_CREATE_SUCCESS = 201
 BMCREMEDY_REST_RESP_NO_CONTENT = 204
@@ -37,6 +42,7 @@ BMCREMEDY_ERROR_API_UNSUPPORTED_METHOD = "Unsupported method {method}"
 BMCREMEDY_EXCEPTION_OCCURRED = "Exception occurred"
 BMCREMEDY_TOKEN_ENDPOINT = "/api/jwt/login"
 BMCREMEDY_ERROR_SERVER_CONNECTIVITY = "Connection failed"
+BMC_ASSET_PARAM_CHECK_LIST_ERRORS = ["unauthorized_client", "invalid_client", "invalid_grant", "invalid_request"]
 BMCREMEDY_ERROR_FROM_SERVER = "API failed. Status code: {status}. Details: {detail}"
 BMCREMEDY_ERROR_JSON_PARSE = "Unable to parse the fields parameter into a dictionary.\nResponse text - {raw_text}"
 BMCREMEDY_REST_RESP_OTHER_ERROR_MESSAGE = "Unknown error occurred"
@@ -47,10 +53,13 @@ BMCREMEDY_CREATE_TICKET = "/api/arsys/v1/entry/HPD:IncidentInterface_Create"
 BMCREMEDY_COMMENT_ENDPOINT = "/api/arsys/v1/entry/HPD:WorkLog"
 BMCREMEDY_SUMMARY_ERROR = "Error while summarizing {action_name} action"
 BMCREMEDY_TEST_CONNECTIVITY_MESSAGE = "Querying endpoint to test connectivity"
-BMCREMEDY_TEST_CONNECTIVITY_FAIL = "Connectivity test failed"
-BMCREMEDY_TEST_CONNECTIVITY_PASS = "Connectivity test succeeded"
+BMCREMEDY_TEST_CONNECTIVITY_FAIL = "Test connectivity failed"
+BMCREMEDY_TEST_CONNECTIVITY_PASS = "Test connectivity passed"
 BMCREMEDY_LOCATION_NOT_FOUND = "Not able to find link to get the newly created incident"
 BMCREMEDY_INCIDENT_NUMBER_NOT_FOUND = "Not able to find incident id"
+BMCREMEDY_REQUIRED_PARAM_OAUTH = "ERROR: {0} is a required parameter for OAuth Authentication, please specify one."
+BMCREMEDY_REQUIRED_PARAM_BASIC = "ERROR: {0} is a required parameter for Basic Authentication, please specify one."
+BMCREMEDY_REQUIRED_PARAM_PORTS = "ERROR: {0} is a required parameter for OAuth Authentication and Action run, please specify in valid ports."
 BMCREMEDY_JSON_LIMIT = "limit"
 BMCREMEDY_JSON_QUERY = "query"
 BMCREMEDY_JSON_OFFSET = 'offset'
