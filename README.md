@@ -6,7 +6,7 @@ Connector Version: 3.0.0
 Product Vendor: BMC Software  
 Product Name: BMC Remedy  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 6.1.1  
+Minimum Product Version: 6.2.0  
 
 This app supports ticket management functions on incidents in BMC Remedy
 
