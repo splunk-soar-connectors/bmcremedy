@@ -15,11 +15,11 @@
     "product_version_regex": ".*",
     "python_version": "3",
     "fips_compliant": true,
-    "min_phantom_version": "6.1.1",
+    "min_phantom_version": "6.2.0",
     "logo": "logo_bmcremedy.svg",
     "logo_dark": "logo_bmcremedy_dark.svg",
     "latest_tested_versions": [
-        "On-Prem, BMC Remedy ITSM version 20.02, Dec 22,2023"
+        "On-Prem, BMC Remedy ITSM version 20.02, April 1,2024"
     ],
     "configuration": {
         "url": {

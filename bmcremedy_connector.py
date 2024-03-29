@@ -116,12 +116,12 @@ class BmcremedyConnector(BaseConnector):
         :return: loaded state
         """
         state = super().load_state()
-        # if not isinstance(state, dict):
-        #     self.debug_print("Resetting the state file with the default format")
-        #     state = {
-        #         "app_version": self.get_app_json().get('app_version')
-        #     }
-        #     return state
+        if not isinstance(state, dict):
+            self.debug_print("Resetting the state file with the default format")
+            state = {
+                "app_version": self.get_app_json().get('app_version')
+            }
+            return state
         try:
             state = self._decrypt_state(state, self.get_asset_id())
         except Exception as e:
@@ -732,7 +732,10 @@ class BmcremedyConnector(BaseConnector):
     def _make_rest_calls_to_phantom(self, action_result, url):
 
         # Ignored the verify semgrep check as the following is a call to the phantom's REST API on the instance itself
-        r = requests.get(url, verify=False)  # nosemgrep
+        try:
+            r = requests.get(url, verify=False)  # nosemgrep
+        except Exception as e:
+            return action_result.set_status(phantom.APP_ERROR, "Error connecting to Phantom: {0}".format(e)), None
         if not r:
             message = 'Status Code: {0}'.format(r.status_code)
             if r.text:
@@ -746,7 +749,7 @@ class BmcremedyConnector(BaseConnector):
 
         return phantom.APP_SUCCESS, resp_json
 
-    def _get_phantom_base_url_ews(self, action_result):
+    def _get_phantom_base_url_bmc(self, action_result):
 
         ret_val, resp_json = self._make_rest_calls_to_phantom(action_result, '{}rest/system_info'.format(self.get_phantom_base_url()))
 
@@ -780,7 +783,7 @@ class BmcremedyConnector(BaseConnector):
         if not action_result:
             action_result = ActionResult()
         # get the phantom ip to redirect to
-        ret_val, phantom_base_url = self._get_phantom_base_url_ews(action_result)
+        ret_val, phantom_base_url = self._get_phantom_base_url_bmc(action_result)
         if phantom.is_fail(ret_val):
             return action_result.get_status(), action_result.get_message()
         # get the asset name
@@ -815,6 +818,9 @@ class BmcremedyConnector(BaseConnector):
 
         if 'HTTPS_PROXY' in os.environ:
             proxy['https'] = os.environ.get('HTTPS_PROXY')
+
+        if 'NO_PROXY' in os.environ:
+            proxy['no_proxy'] = os.environ.get('NO_PROXY')
 
         state['proxy'] = proxy
         state['client_id'] = client_id
