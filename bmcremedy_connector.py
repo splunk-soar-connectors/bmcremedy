@@ -333,21 +333,21 @@ class BmcremedyConnector(BaseConnector):
 
         # Something went wrong with the request
         if phantom.is_fail(response_status):
-            return None, "Failed to generate token"
+            return phantom.APP_ERROR, "Failed to generate token"
 
         if not response_dict:
             self.debug_print(consts.BMCREMEDY_TOKEN_GENERATION_ERROR_MESSAGE)
-            return None, consts.BMCREMEDY_TOKEN_GENERATION_ERROR_MESSAGE
+            return phantom.APP_ERROR, consts.BMCREMEDY_TOKEN_GENERATION_ERROR_MESSAGE
 
         # check the header for any message that denote a failure
         ret_val = self._check_login_status(response)
         if phantom.is_fail(ret_val):
-            return None, "Failed while checking login status"
+            return phantom.APP_ERROR, "Failed while checking login status"
 
         # Saving the token to be used in subsequent actions
         self._state['token'] = response_dict["content"].decode("utf-8")
 
-        return True, response_dict["content"].decode("utf-8")
+        return phantom.APP_SUCCESS, response_dict["content"].decode("utf-8")
 
     def _provide_attachment_details(self, attachment_list, action_result):
         """ Helper function that is used to get attachment from the vault, and provide attachment details which can be
@@ -480,12 +480,12 @@ class BmcremedyConnector(BaseConnector):
         if not (oauth_token and oauth_token.get("refresh_token")):
             self._reset_the_state()
             action_result.set_status(phantom.APP_ERROR, "Unable to get refresh token. Please run Test Connectivity again")
-            return None, "Unable to get refresh token. Please run Test Connectivity again"
+            return phantom.APP_ERROR, "Unable to get refresh token. Please run Test Connectivity again"
 
         if client_id != self._state.get('client_id', ''):
             self._reset_the_state()
             action_result.set_status(phantom.APP_ERROR, "Client ID has been changed. Please run Test Connectivity again")
-            return None, "Client ID has been changed. Please run Test Connectivity again"
+            return phantom.APP_ERROR, "Client ID has been changed. Please run Test Connectivity again"
 
         refresh_token = oauth_token['refresh_token']
 
@@ -498,10 +498,10 @@ class BmcremedyConnector(BaseConnector):
             'client_secret': client_secret
         }
         try:
-            r = requests.post(request_url, data=body, timeout=60)
+            r = requests.post(request_url, data=body, timeout=consts.BMCREMEDY_OAUTH_TOKEN_TIMEOUT)
         except Exception as e:
             action_result.set_status(phantom.APP_ERROR, "Error refreshing token: {}".format(str(e)))
-            return None, "Error refreshing token: {}".format(str(e))
+            return phantom.APP_ERROR, "Error refreshing token: {}".format(str(e))
 
         try:
             oauth_token = r.json()
@@ -514,7 +514,7 @@ class BmcremedyConnector(BaseConnector):
                 return None, oauth_token["error_description"]
         except Exception as e:
             action_result.set_status(phantom.APP_ERROR, "Error retrieving access token using refresh token token. Exception - {}".format(str(e)))
-            return None, "Error retrieving OAuth Token. Exception - {}".format(str(e))
+            return phantom.APP_ERROR, "Error retrieving OAuth Token. Exception - {}".format(str(e))
 
         self._state['oauth_token'] = oauth_token
         return phantom.APP_SUCCESS, "Successfully refreshed access token"
@@ -806,7 +806,7 @@ class BmcremedyConnector(BaseConnector):
 
         ret_val, message = self._get_url_to_app_rest()
         if phantom.is_fail(ret_val):
-            return None, message
+            return phantom.APP_ERROR, message
 
         app_rest_url = message
 
@@ -841,7 +841,7 @@ class BmcremedyConnector(BaseConnector):
             url = '{}&'.format(url)
         except Exception as e:
             self.debug_print("Exception occured while getting code. Exception: {}".format(e))
-            return None, "Please specify the valid base URL. Error - {}".format(e)
+            return phantom.APP_ERROR, "Please specify the valid base URL. Error - {}".format(e)
         self.save_progress("To continue, open this link in a new tab in your browser")
         self.save_progress(url)
         for i in range(0, 60):
@@ -854,10 +854,10 @@ class BmcremedyConnector(BaseConnector):
             elif state.get('error'):
                 self._reset_the_state()
                 self.rsh.delete_state()
-                return None, "Error retrieving OAuth token connector"
+                return phantom.APP_ERROR, "Error retrieving OAuth token connector"
         else:
             self.rsh.delete_state()
-            return None, "Timed out waiting for login"
+            return phantom.APP_ERROR, "Timed out waiting for login"
 
         self._state['oauth_token'] = oauth_token
         self._state['client_id'] = client_id
@@ -867,7 +867,7 @@ class BmcremedyConnector(BaseConnector):
 
         self.rsh.delete_state()
 
-        return oauth_token['access_token'], ""
+        return phantom.APP_SUCCESS, ""
 
     def _set_bmc_int_auth(self, config):
 
@@ -875,11 +875,11 @@ class BmcremedyConnector(BaseConnector):
         client_secret = config.get(consts.BMCREMEDY_CONFIG_CLIENT_SECRET)
 
         if not client_id:
-            return None, "ERROR: {0} is a required parameter for BMC Authentication.\
+            return phantom.APP_ERROR, "ERROR: {0} is a required parameter for BMC Authentication.\
                  please specify one.".format(consts.BMCREMEDY_CONFIG_CLIENT_ID)
 
         if not client_secret:
-            return None, "ERROR: {0} is a required parameter for BMC Authentication.\
+            return phantom.APP_ERROR, "ERROR: {0} is a required parameter for BMC Authentication.\
                  please specify one.".format(consts.BMCREMEDY_CONFIG_CLIENT_SECRET)
 
         return self._bmc_int_auth_initial(client_id, client_secret)
@@ -889,13 +889,13 @@ class BmcremedyConnector(BaseConnector):
         config = self.get_config()
         if self.auth_type == consts.BMCREMEDY_BASIC:
             self.save_progress("Using Basic auth")
-            auth_token, message = self._generate_api_token(action_result)
+            ret_token, message = self._generate_api_token(action_result)
         elif self.auth_type == consts.BMCREMEDY_OAUTH:
             self.save_progress("Using BMC SSO (interactive)")
-            auth_token, message = self._set_bmc_int_auth(config)
+            ret_token, message = self._set_bmc_int_auth(config)
         else:
             message = "Please specify authentication method"
-        if not auth_token:
+        if not ret_token:
             return phantom.APP_ERROR, message
         return phantom.APP_SUCCESS, message
 
