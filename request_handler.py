@@ -20,6 +20,8 @@ import encryption_helper
 import requests
 from django.http import HttpResponse
 
+import bmcremedy_consts as consts
+
 
 def handle_request(request, path_parts):
     return BMCRequestHandler(request, path_parts).handle_request()
@@ -62,12 +64,12 @@ class BMCRequestHandler():
         }
         try:
             # Ignoring request-sensitive-data semgrep check as it is a false positive
-            r = requests.post('{}/token'.format(request_url), data=body, proxies=proxy, timeout=60)  # nosemgrep
+            r = requests.post(f'{request_url}/token', data=body, proxies=proxy, timeout=60)  # nosemgrep
             r.raise_for_status()
             resp_json = r.json()
         except Exception as e:
             return False, self._return_error(
-                "Error retrieving OAuth Token: {}".format(str(e)),
+                f"Error retrieving OAuth Token: {str(e)}",
                 401
             )
         state['oauth_token'] = resp_json
@@ -82,9 +84,7 @@ class BMCRequestHandler():
         :param asset_id: asset_id
         :return: is_valid: Boolean True if valid, False if not.
         """
-        if isinstance(asset_id, str) and asset_id.isalnum() and len(asset_id) <= 128:
-            return True
-        return False
+        return isinstance(asset_id, str) and asset_id.isalnum() and len(asset_id) <= 128
 
     def handle_request(self):
         try:
@@ -107,7 +107,7 @@ class BMCRequestHandler():
 
             return HttpResponse("You can now close this page", content_type="text/plain")
         except Exception as e:
-            return self._return_error("Error handling request: {}".format(str(e)), 400)
+            return self._return_error(f"Error handling request: {str(e)}", 400)
 
 
 class RequestStateHandler:
@@ -121,8 +121,7 @@ class RequestStateHandler:
     def _encrypt_state(self, state):
         try:
             if 'oauth_token' in state:
-                token_list = ['access_token', 'id_token', 'refresh_token']
-                for token_name in token_list:
+                for token_name in consts.BMCREMEDY_TOKEN_LIST:
                     if state['oauth_token'].get(token_name):
                         state['oauth_token'][token_name] = encryption_helper.encrypt(  # pylint: disable=E1101
                             state['oauth_token'][token_name],
@@ -136,8 +135,7 @@ class RequestStateHandler:
     def _decrypt_state(self, state):
         try:
             if 'oauth_token' in state:
-                token_list = ['access_token', 'id_token', 'refresh_token']
-                for token_name in token_list:
+                for token_name in consts.BMCREMEDY_TOKEN_LIST:
                     if state['oauth_token'].get(token_name):
                         state['oauth_token'][token_name] = encryption_helper.decrypt(  # pylint: disable=E1101
                             state['oauth_token'][token_name],
@@ -151,7 +149,7 @@ class RequestStateHandler:
 
     def _get_state_file(self):
         dirpath = os.path.split(__file__)[0]
-        state_file = "{0}/{1}_state.json".format(dirpath, self._asset_id)
+        state_file = f"{dirpath}/{self._asset_id}_state.json"
         return state_file
 
     def delete_state(self):

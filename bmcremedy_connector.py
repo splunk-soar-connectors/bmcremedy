@@ -73,8 +73,7 @@ class BmcremedyConnector(BaseConnector):
         if token:
             state["token"] = encryption_helper.decrypt(token, salt)
         if oauth_token:
-            token_list = ['access_token', 'id_token', 'refresh_token']
-            for token_name in token_list:
+            for token_name in consts.BMCREMEDY_TOKEN_LIST:
                 if state['oauth_token'].get(token_name):
                     state['oauth_token'][token_name] = encryption_helper.decrypt(  # pylint: disable=E1101
                         state['oauth_token'][token_name],
@@ -97,8 +96,7 @@ class BmcremedyConnector(BaseConnector):
             state["token"] = encryption_helper.encrypt(token, salt)
             state["is_encrypted"] = True
         if oauth_token:
-            token_list = ['access_token', 'id_token', 'refresh_token']
-            for token_name in token_list:
+            for token_name in consts.BMCREMEDY_TOKEN_LIST:
                 if state['oauth_token'].get(token_name):
                     state['oauth_token'][token_name] = encryption_helper.encrypt(  # pylint: disable=E1101
                         state['oauth_token'][token_name],
@@ -172,9 +170,6 @@ class BmcremedyConnector(BaseConnector):
             if self.auth_type == consts.BMCREMEDY_OAUTH:
                 return self.set_status(phantom.APP_ERROR, consts.BMCREMEDY_STATE_FILE_CORRUPT_ERROR)
 
-        if len(config.get("ports").split(',')) != 2:
-            return self.set_status(phantom.APP_ERROR, consts.BMCREMEDY_REQUIRED_PARAM_PORTS.format("ports"))
-
         if self.auth_type == consts.BMCREMEDY_BASIC:
             required_params = ["username", "password"]
             for key in required_params:
@@ -187,20 +182,18 @@ class BmcremedyConnector(BaseConnector):
                     return self.set_status(phantom.APP_ERROR, consts.BMCREMEDY_REQUIRED_PARAM_OAUTH.format(key))
             if self.get_action_identifier() == phantom.ACTION_ID_TEST_ASSET_CONNECTIVITY:
                 test_asset_connectivity_oauth = True
-            else:
-                if not self._state.get("oauth_token", False):
-                    return self.set_status(phantom.APP_ERROR, "Required tokens not found in state file. Please run test connectivity first...")
+            elif "oauth_token" not in self._state:
+                return self.set_status(phantom.APP_ERROR, "Required tokens not found in state file. Please run test connectivity first...")
         else:
             return self.set_status(phantom.APP_ERROR, "Please provide a valid authentication mechanism to use")
 
         if test_asset_connectivity_oauth:
-            self._base_url += f':{config.get("ports").split(",")[1].strip()}'
+            self._base_url += f':{config.get("sso_port")}'
         else:
-            self._base_url += f':{config.get("ports").split(",")[0].strip()}'
+            self._base_url += f':{config.get("rest_port")}'
 
-        self.is_oauth_token_not_exist = self.auth_type == consts.BMCREMEDY_OAUTH and \
-            (not self._state.get("oauth_token", {}).get("access_token", False)) and \
-                (not self._state.get("oauth_token", {}).get("refresh_token", False))
+        self.is_oauth_token_not_exist = self.auth_type == consts.BMCREMEDY_OAUTH \
+            and not all(key in self._state.get("oauth_token", {}) for key in ["access_token", "refresh_token"])
         self._is_client_id_changed = (self._state.get(consts.BMCREMEDY_CONFIG_CLIENT_ID) and config.get(consts.BMCREMEDY_CONFIG_CLIENT_ID)) and \
             self._state.get(consts.BMCREMEDY_CONFIG_CLIENT_ID) != config.get(consts.BMCREMEDY_CONFIG_CLIENT_ID)
 
@@ -211,7 +204,6 @@ class BmcremedyConnector(BaseConnector):
 
         if not hasattr(response, 'headers'):
             return phantom.APP_ERROR, "Response missing headers, cannot determine success"
-            # return action_result.set_status(phantom.APP_ERROR, "Response missing headers, cannot determine success")
 
         x_ar_messages = response.headers.get('x-ar-messages')
         if not x_ar_messages:
@@ -222,7 +214,6 @@ class BmcremedyConnector(BaseConnector):
             x_ar_messages = json.loads(x_ar_messages)
         except Exception as e:
             return phantom.APP_ERROR, "Unable to process X-AR-Messages. Exception - {}".format(e)
-            # return action_result.set_status(phantom.APP_ERROR, "Unable to process X-AR-Messages")
 
         for curr_msg_dict in x_ar_messages:
             message_text = curr_msg_dict.get('messageText')
@@ -230,7 +221,6 @@ class BmcremedyConnector(BaseConnector):
                 continue
             if 'login failed' in message_text.lower():
                 return phantom.APP_ERROR, "Login failed, please check your credentials"
-                # return action_result.set_status(phantom.APP_ERROR, "Login failed, please check your credentials")
 
         return phantom.APP_SUCCESS
 
@@ -479,18 +469,18 @@ class BmcremedyConnector(BaseConnector):
 
         if not (oauth_token and oauth_token.get("refresh_token")):
             self._reset_the_state()
-            action_result.set_status(phantom.APP_ERROR, "Unable to get refresh token. Please run Test Connectivity again")
-            return phantom.APP_ERROR, "Unable to get refresh token. Please run Test Connectivity again"
+            action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_REFRESH_TOKEN_NOT_PRESENT)
+            return phantom.APP_ERROR, consts.BMCREMEDY_REFRESH_TOKEN_NOT_PRESENT
 
         if client_id != self._state.get('client_id', ''):
             self._reset_the_state()
-            action_result.set_status(phantom.APP_ERROR, "Client ID has been changed. Please run Test Connectivity again")
-            return phantom.APP_ERROR, "Client ID has been changed. Please run Test Connectivity again"
+            action_result.set_status(phantom.APP_ERROR, consts.BMCREMEDY_CLIENT_ID_CHANGED)
+            return phantom.APP_ERROR, consts.BMCREMEDY_CLIENT_ID_CHANGED
 
         refresh_token = oauth_token['refresh_token']
 
-        base_url = self._base_url.replace(self._base_url[len(self._base_url) - 4:], config.get("ports").split(",")[1].strip())
-        request_url = f'{base_url}/rsso/oauth2/token'
+        base_url = self._base_url.replace(self._base_url[len(self._base_url) - 4:], config.get("sso_port").strip())
+        request_url = f'{base_url}{consts.BMCREMEDY_OAUTH_TOKEN_ENDPOINT}'
         body = {
             'grant_type': 'refresh_token',
             'client_id': client_id,
@@ -511,7 +501,7 @@ class BmcremedyConnector(BaseConnector):
                 action_result.set_status(phantom.APP_ERROR,
                     f"Error occur while refreshing access token using refresh token. \
                         Please run test connectivity first. Error message - {oauth_token['error_description']}")
-                return None, oauth_token["error_description"]
+                return phantom.APP_ERROR, oauth_token["error_description"]
         except Exception as e:
             action_result.set_status(phantom.APP_ERROR, "Error retrieving access token using refresh token token. Exception - {}".format(str(e)))
             return phantom.APP_ERROR, "Error retrieving OAuth Token. Exception - {}".format(str(e))
@@ -549,7 +539,6 @@ class BmcremedyConnector(BaseConnector):
         else:
             if self.get_action_identifier() != phantom.ACTION_ID_TEST_ASSET_CONNECTIVITY:
                 if not self._state.get("token", False):
-                    # token_action_result = ActionResult()
                     ret_code, response_data = self._generate_api_token(action_result)
                     if phantom.is_fail(ret_code):
                         return action_result.get_status(), response_data
@@ -814,13 +803,13 @@ class BmcremedyConnector(BaseConnector):
 
         proxy = {}
         if 'HTTP_PROXY' in os.environ:
-            proxy['http'] = os.environ.get('HTTP_PROXY')
+            proxy['http'] = os.environ['HTTP_PROXY']
 
         if 'HTTPS_PROXY' in os.environ:
-            proxy['https'] = os.environ.get('HTTPS_PROXY')
+            proxy['https'] = os.environ['HTTPS_PROXY']
 
         if 'NO_PROXY' in os.environ:
-            proxy['no_proxy'] = os.environ.get('NO_PROXY')
+            proxy['no_proxy'] = os.environ['NO_PROXY']
 
         state['proxy'] = proxy
         state['client_id'] = client_id

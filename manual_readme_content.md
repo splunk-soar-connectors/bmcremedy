@@ -24,7 +24,13 @@ Incidents are typically categorized among following types:
 -   **Infrastructure Event**
     -   Used for integration for system management tools.
 
-The **Authentication Mechanism to Use** config parameter provides the configuration information Phantom uses to communicate with BMC Platform. Currently, there are two ways to authenticate.
+
+## Backward Compatibility
+
+-   A new required config parameters has been added and base url behavior has been updated. Hence, it is requested to the
+    end-user to please update their existing asset by re-inserting | modifying the corresponding asset.
+
+The **Authentication Mechanism to Use** config parameter provides the configuration information Splunk SOAR uses to communicate with BMC Platform. Currently, there are two ways to authenticate.
 
 -   Basic
 -   BMC SSO (Interactive)
@@ -32,7 +38,7 @@ The **Authentication Mechanism to Use** config parameter provides the configurat
  
 ## Basic Authentication
 
-Fill in the **Base URL** , **Username** and **Password**. The remaining configuration
+Fill in the **Base URL** , **Username** and **Password** and the remaining required configuration parameters.
 
 ## OAuth Authentication
 

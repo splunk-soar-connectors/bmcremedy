@@ -51,12 +51,15 @@ BMCREMEDY_LIST_TICKETS = "/api/arsys/v1/entry/HPD:IncidentInterface?fields=value
 BMCREMEDY_GET_TICKET = "/api/arsys/v1/entry/HPD:IncidentInterface"
 BMCREMEDY_CREATE_TICKET = "/api/arsys/v1/entry/HPD:IncidentInterface_Create"
 BMCREMEDY_COMMENT_ENDPOINT = "/api/arsys/v1/entry/HPD:WorkLog"
+BMCREMEDY_OAUTH_TOKEN_ENDPOINT = "/rsso/oauth2/token"
 BMCREMEDY_SUMMARY_ERROR = "Error while summarizing {action_name} action"
 BMCREMEDY_TEST_CONNECTIVITY_MESSAGE = "Querying endpoint to test connectivity"
 BMCREMEDY_TEST_CONNECTIVITY_FAIL = "Test connectivity failed"
 BMCREMEDY_TEST_CONNECTIVITY_PASS = "Test connectivity passed"
 BMCREMEDY_LOCATION_NOT_FOUND = "Not able to find link to get the newly created incident"
 BMCREMEDY_INCIDENT_NUMBER_NOT_FOUND = "Not able to find incident id"
+BMCREMEDY_REFRESH_TOKEN_NOT_PRESENT = "Unable to get refresh token. Please run Test Connectivity again"
+BMCREMEDY_CLIENT_ID_CHANGED = "Client ID has been changed. Please run Test Connectivity again"
 BMCREMEDY_REQUIRED_PARAM_OAUTH = "ERROR: {0} is a required parameter for OAuth Authentication, please specify one."
 BMCREMEDY_REQUIRED_PARAM_BASIC = "ERROR: {0} is a required parameter for Basic Authentication, please specify one."
 BMCREMEDY_REQUIRED_PARAM_PORTS = "ERROR: {0} is a required parameter for OAuth Authentication and Action run, please specify in valid ports."
@@ -71,6 +74,7 @@ BMCREMEDY_UNKNOWN_VAULT_ID = "Invalid or unknown vault ID"
 BMCREMEDY_ATTACHMENT_LIMIT_EXCEED = "Maximum 3 attachments can be provided"
 BMCREMEDY_DEFAULT_PAGE_LIMIT = 100
 BMCREMEDY_DEFAULT_OFFSET = 0
+BMCREMEDY_TOKEN_LIST = ['access_token', 'id_token', 'refresh_token']
 BMCREMEDY_ENCODE_TEMPLATE_FILE = """--{boundary}
 Content-Disposition: form-data; name="{name}"; filename="{filename}"
 Content-Type: {contenttype}
