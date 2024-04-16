@@ -36,7 +36,13 @@ Incidents are typically categorized among following types:
 -   **Infrastructure Event**
     -   Used for integration for system management tools.
 
-The **Authentication Mechanism to Use** config parameter provides the configuration information Phantom uses to communicate with BMC Platform. Currently, there are two ways to authenticate.
+
+## Backward Compatibility
+
+-   A new required config parameters has been added and base url behavior has been updated. Hence, it is requested to the
+    end-user to please update their existing asset by re-inserting | modifying the corresponding asset.
+
+The **Authentication Mechanism to Use** config parameter provides the configuration information Splunk SOAR uses to communicate with BMC Platform. Currently, there are two ways to authenticate.
 
 -   Basic
 -   BMC SSO (Interactive)
@@ -44,7 +50,7 @@ The **Authentication Mechanism to Use** config parameter provides the configurat
  
 ## Basic Authentication
 
-Fill in the **Base URL** , **Username** and **Password**. The remaining configuration
+Fill in the **Base URL** , **Username** and **Password** and the remaining required configuration parameters.
 
 ## OAuth Authentication
 
@@ -123,13 +129,14 @@ The below configuration variables are required for this Connector to operate.  T
 VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
 **url** |  required  | string | Base URL without port (e.g. http://mybmc.contoso.com)
-**verify_server_cert** |  optional  | boolean | Verify server certificate
+**auth_type** |  optional  | string | Authentication Mechanism to Use
 **username** |  optional  | string | Username
 **password** |  optional  | password | Password
 **client_id** |  optional  | string | Client App ID for (Interactive)/OAuth Authentication
 **client_secret** |  optional  | password | Client Secret for (Interactive)/OAuth Authentication
-**auth_type** |  optional  | string | Authentication Mechanism to Use
-**ports** |  required  | string | Ports to use for SSO and REST calls (comma-separated [First port for REST calls, Second for SSO calls])
+**rest_port** |  required  | string | Ports to use for REST calls
+**sso_port** |  required  | string | Ports to use for SSO calls
+**verify_server_cert** |  optional  | boolean | Verify server certificate
 
 ### Supported Actions  
 [test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied credentials  
