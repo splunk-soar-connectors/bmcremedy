@@ -25,11 +25,11 @@ import requests
 from bs4 import BeautifulSoup
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
+from phantom_common import app_utils
 
 # Local imports
 import bmcremedy_consts as consts
 from request_handler import RequestStateHandler  # noqa
-from request_handler import _get_dir_name_from_app_name
 
 
 class RetVal3(tuple):
@@ -782,7 +782,7 @@ class BmcremedyConnector(BaseConnector):
         self.save_progress('Using Phantom base URL as: {0}'.format(phantom_base_url))
         app_json = self.get_app_json()
         app_name = app_json['name']
-        app_dir_name = _get_dir_name_from_app_name(app_name)
+        app_dir_name = app_utils.app_name_to_dir_name(app_name)
         url_to_app_rest = "{0}/rest/handler/{1}_{2}/{3}".format(phantom_base_url, app_dir_name, app_json['appid'], asset_name)
         return phantom.APP_SUCCESS, url_to_app_rest
 

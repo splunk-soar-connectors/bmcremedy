@@ -62,14 +62,14 @@
             "data_type": "string",
             "order": 6,
             "required": true,
-            "description": "Ports to use for REST calls",
+            "description": "Port to use for REST calls",
             "default": "8008"
         },
         "sso_port": {
             "data_type": "string",
             "order": 7,
             "required": true,
-            "description": "Ports to use for SSO calls",
+            "description": "Port to use for SSO calls",
             "default": "8080"
         },
         "verify_server_cert": {

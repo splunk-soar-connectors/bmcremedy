@@ -27,14 +27,6 @@ def handle_request(request, path_parts):
     return BMCRequestHandler(request, path_parts).handle_request()
 
 
-def _get_dir_name_from_app_name(app_name):
-    app_name = ''.join([x for x in app_name if x.isalnum()])
-    app_name = app_name.lower()
-    if not app_name:
-        app_name = "app_for_phantom"
-    return app_name
-
-
 class BMCRequestHandler():
     def __init__(self, request, path_parts):
         self._request = request
@@ -69,7 +61,7 @@ class BMCRequestHandler():
             resp_json = r.json()
         except Exception as e:
             return False, self._return_error(
-                f"Error retrieving OAuth Token: {str(e)}",
+                f"Error retrieving OAuth Token: {e}",
                 401
             )
         state['oauth_token'] = resp_json
@@ -119,32 +111,32 @@ class RequestStateHandler:
             raise AttributeError("RequestStateHandler got invalid asset_id")
 
     def _encrypt_state(self, state):
-        try:
-            if 'oauth_token' in state:
-                for token_name in consts.BMCREMEDY_TOKEN_LIST:
-                    if state['oauth_token'].get(token_name):
+        if 'oauth_token' in state:
+            for token_name in consts.BMCREMEDY_TOKEN_LIST:
+                if state['oauth_token'].get(token_name):
+                    try:
                         state['oauth_token'][token_name] = encryption_helper.encrypt(  # pylint: disable=E1101
                             state['oauth_token'][token_name],
                             self._asset_id
                         )
-        except Exception:
-            state.pop('oauth_token')
-            return state
+                    except Exception:
+                        state.pop('oauth_token')
+                        return state
         return state
 
     def _decrypt_state(self, state):
-        try:
-            if 'oauth_token' in state:
-                for token_name in consts.BMCREMEDY_TOKEN_LIST:
-                    if state['oauth_token'].get(token_name):
+        if 'oauth_token' in state:
+            for token_name in consts.BMCREMEDY_TOKEN_LIST:
+                if state['oauth_token'].get(token_name):
+                    try:
                         state['oauth_token'][token_name] = encryption_helper.decrypt(  # pylint: disable=E1101
                             state['oauth_token'][token_name],
                             self._asset_id
                         )
-        except Exception:
-            message = "Error while decrypting"
-            state.pop('oauth_token', None)
-            return state, message
+                    except Exception:
+                        message = "Error while decrypting"
+                        state.pop('oauth_token', None)
+                        return state, message
         return state, ""
 
     def _get_state_file(self):

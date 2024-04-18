@@ -27,8 +27,7 @@ Incidents are typically categorized among following types:
 
 ## Backward Compatibility
 
--   A new required config parameters has been added and base url behavior has been updated. Hence, it is requested to the
-    end-user to please update their existing asset by re-inserting | modifying the corresponding asset.
+-   New required config parameters have been added in the 3.0.0 version and base url behavior has been updated. Please update any   existing assets by re-inserting or modifying them.
 
 The **Authentication Mechanism to Use** config parameter provides the configuration information Splunk SOAR uses to communicate with BMC Platform. Currently, there are two ways to authenticate.
 
