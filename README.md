@@ -39,8 +39,7 @@ Incidents are typically categorized among following types:
 
 ## Backward Compatibility
 
--   A new required config parameters has been added and base url behavior has been updated. Hence, it is requested to the
-    end-user to please update their existing asset by re-inserting | modifying the corresponding asset.
+-   New required config parameters have been added in the 3.0.0 version and base url behavior has been updated. Please update any   existing assets by re-inserting or modifying them.
 
 The **Authentication Mechanism to Use** config parameter provides the configuration information Splunk SOAR uses to communicate with BMC Platform. Currently, there are two ways to authenticate.
 
@@ -134,8 +133,8 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 **password** |  optional  | password | Password
 **client_id** |  optional  | string | Client App ID for (Interactive)/OAuth Authentication
 **client_secret** |  optional  | password | Client Secret for (Interactive)/OAuth Authentication
-**rest_port** |  required  | string | Ports to use for REST calls
-**sso_port** |  required  | string | Ports to use for SSO calls
+**rest_port** |  required  | string | Port to use for REST calls
+**sso_port** |  required  | string | Port to use for SSO calls
 **verify_server_cert** |  optional  | boolean | Verify server certificate
 
 ### Supported Actions  
