@@ -625,8 +625,9 @@ class BmcremedyConnector(BaseConnector):
                 response = request_func('{}{}'.format(self._base_url, endpoint), headers=headers, files=files,
                                     verify=self._verify_server_cert, timeout=consts.BMCREMEDY_DEFAULT_TIMEOUT)
             else:
+                # Added 120 seconds timeout for REST call because sometime list tickets takes more time based on sort parameter's value
                 response = request_func('{}{}'.format(self._base_url, endpoint), headers=headers, data=data, params=params,
-                                        verify=self._verify_server_cert)
+                                        verify=self._verify_server_cert, timeout=consts.BMCREMEDY_TIMEOUT_FOR_REST_CALL)
 
         except requests.exceptions.ProxyError as e:
             error = self._get_error_message_from_exception(e)
