@@ -1,6 +1,6 @@
 # File: bmcremedy_consts.py
 #
-# Copyright (c) 2017-2023 Splunk Inc.
+# Copyright (c) 2017-2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -40,8 +40,10 @@ BMCREMEDY_ERROR_SERVER_CONNECTIVITY = "Connection failed"
 BMCREMEDY_ERROR_FROM_SERVER = "API failed. Status code: {status}. Details: {detail}"
 BMCREMEDY_ERROR_JSON_PARSE = "Unable to parse the fields parameter into a dictionary.\nResponse text - {raw_text}"
 BMCREMEDY_REST_RESP_OTHER_ERROR_MESSAGE = "Unknown error occurred"
-BMCREMEDY_LIST_TICKETS = "/api/arsys/v1/entry/HPD:IncidentInterface?fields=values(Incident Number,First Name," \
-                         "Last Name,Description,Status,Priority,Assigned Group,Assignee)"
+BMCREMEDY_LIST_TICKETS = (
+    "/api/arsys/v1/entry/HPD:IncidentInterface?fields=values(Incident Number,First Name,"
+    "Last Name,Description,Status,Priority,Assigned Group,Assignee)"
+)
 BMCREMEDY_GET_TICKET = "/api/arsys/v1/entry/HPD:IncidentInterface"
 BMCREMEDY_CREATE_TICKET = "/api/arsys/v1/entry/HPD:IncidentInterface_Create"
 BMCREMEDY_COMMENT_ENDPOINT = "/api/arsys/v1/entry/HPD:WorkLog"
@@ -53,7 +55,7 @@ BMCREMEDY_LOCATION_NOT_FOUND = "Not able to find link to get the newly created i
 BMCREMEDY_INCIDENT_NUMBER_NOT_FOUND = "Not able to find incident id"
 BMCREMEDY_JSON_LIMIT = "limit"
 BMCREMEDY_JSON_QUERY = "query"
-BMCREMEDY_JSON_OFFSET = 'offset'
+BMCREMEDY_JSON_OFFSET = "offset"
 BMCREMEDY_INCIDENT_NUMBER = "id"
 BMCREMEDY_COMMENT_ACTIVITY_TYPE = "work_info_type"
 BMCREMEDY_JSON_FIELDS = "fields"
@@ -68,14 +70,14 @@ Content-Type: {contenttype}
 Content-Transfer-Encoding: binary
 
 {value}
-""".replace('\n', '\r\n')
+""".replace("\n", "\r\n")
 BMCREMEDY_ENCODE_TEMPLATE = """--{boundary}
 Content-Transfer-Encoding: 8bit
 Content-Type: application/json; charset=UTF-8
 Content-Disposition: form-data; name="{name}"
 
 {value}
-""".replace('\n', '\r\n')
+""".replace("\n", "\r\n")
 BMCREMEDY_URL_NOT_FOUND = "Update link not found for the given incident id"
 BMCREMEDY_TOKEN_GENERATION_ERROR_MESSAGE = "Failed to generate token"
 BMCREMEDY_ERROR_FETCHING_URL = "Error while fetching url: {error}"
@@ -102,13 +104,17 @@ BMCREMEDY_VALID_INT_MESSAGE = "Please provide a valid integer value in the '{par
 BMCREMEDY_NON_NEG_NON_ZERO_INT_MESSAGE = "Please provide a valid non-zero positive integer value in '{param}' parameter"
 BMCREMEDY_NON_NEG_INT_MESSAGE = "Please provide a valid non-negative integer value in the '{param}' parameter"
 
-BMCREMEDY_STATE_FILE_CORRUPT_ERROR = ("Error occurred while loading the state file due to its unexpected format. "
-                                    "Resetting the state file with the default format. Please try again")
-BMCREMEDY_FIELDS_PARAM_ERROR_MESSAGE = ("Please provide JSON formatted dictionary in the 'fields' action parameter "
-                                  "e.g: {\"First_Name\": \"Customer First Name\", \"Last_Name\": \"Customer Last Name\", "
-                                  "\"Description\": \"Incident Description\", \"Service_Type\": \"User Service Restoration\", "
-                                  "\"Reported Source\": \"Direct Input\", \"Status\": \"Assigned\", "
-                                  "\"Assignee Login ID\": \"User\", \"Assignee\": \"User Name\"}")
+BMCREMEDY_STATE_FILE_CORRUPT_ERROR = (
+    "Error occurred while loading the state file due to its unexpected format. "
+    "Resetting the state file with the default format. Please try again"
+)
+BMCREMEDY_FIELDS_PARAM_ERROR_MESSAGE = (
+    "Please provide JSON formatted dictionary in the 'fields' action parameter "
+    'e.g: {"First_Name": "Customer First Name", "Last_Name": "Customer Last Name", '
+    '"Description": "Incident Description", "Service_Type": "User Service Restoration", '
+    '"Reported Source": "Direct Input", "Status": "Assigned", '
+    '"Assignee Login ID": "User", "Assignee": "User Name"}'
+)
 
 # Dictionary that maps each error code with its corresponding message
 ERROR_RESPONSE_DICT = {
@@ -117,12 +123,11 @@ ERROR_RESPONSE_DICT = {
     BMCREMEDY_REST_RESP_FORBIDDEN: BMCREMEDY_REST_RESP_FORBIDDEN_MESSAGE,
     BMCREMEDY_REST_RESP_NOT_FOUND: BMCREMEDY_REST_RESP_NOT_FOUND_MESSAGE,
     BMCREMEDY_REST_RESP_METHOD_NOT_ALLOWED: BMCREMEDY_REST_RESP_METHOD_NOT_ALLOWED_MESSAGE,
-    BMCREMEDY_REST_RESP_INTERNAL_SERVER_ERROR: BMCREMEDY_REST_RESP_INTERNAL_SERVER_ERROR_MESSAGE
+    BMCREMEDY_REST_RESP_INTERNAL_SERVER_ERROR: BMCREMEDY_REST_RESP_INTERNAL_SERVER_ERROR_MESSAGE,
 }
 
 # List containing http codes to be considered as success
-SUCCESS_RESPONSE_CODES = [BMCREMEDY_REST_RESP_TOKEN_SUCCESS, BMCREMEDY_REST_RESP_CREATE_SUCCESS,
-                          BMCREMEDY_REST_RESP_NO_CONTENT]
+SUCCESS_RESPONSE_CODES = [BMCREMEDY_REST_RESP_TOKEN_SUCCESS, BMCREMEDY_REST_RESP_CREATE_SUCCESS, BMCREMEDY_REST_RESP_NO_CONTENT]
 
 # List of parameters that will be considered for adding attachment to an incident
 ADD_ATTACHMENT_PARAMS_LIST = ["Work Log Type", "View Access", "Secure Work Log", "Detailed Description"]
