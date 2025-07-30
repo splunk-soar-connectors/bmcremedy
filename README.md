@@ -1,7 +1,7 @@
 # BMC Remedy
 
 Publisher: Splunk \
-Connector Version: 2.1.2 \
+Connector Version: 2.1.3 \
 Product Vendor: BMC Software \
 Product Name: BMC Remedy \
 Minimum Product Version: 5.3.5
