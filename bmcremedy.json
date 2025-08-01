@@ -12,10 +12,7 @@
     "product_vendor": "BMC Software",
     "product_name": "BMC Remedy",
     "product_version_regex": ".*",
-    "python_version": [
-        "3.9",
-        "3.13"
-    ],
+    "python_version": "3.9, 3.13",
     "fips_compliant": true,
     "min_phantom_version": "5.3.5",
     "logo": "logo_bmcremedy.svg",
