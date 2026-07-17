@@ -28,9 +28,9 @@
             "order": 0
         },
         "verify_server_cert": {
-            "description": "Verify server certificate",
+            "description": "Verify the server certificate. Disabling verification can expose credentials to network attackers and should only be used in isolated test environments.",
             "data_type": "boolean",
-            "default": false,
+            "default": true,
             "order": 1
         },
         "username": {

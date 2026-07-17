@@ -130,7 +130,7 @@ class BmcremedyConnector(BaseConnector):
         self._base_url = config[consts.BMCREMEDY_CONFIG_SERVER].strip("/")
         self._api_username = config[consts.BMCREMEDY_CONFIG_API_USERNAME]
         self._api_password = config[consts.BMCREMEDY_CONFIG_API_PASSWORD]
-        self._verify_server_cert = config.get(consts.BMCREMEDY_CONFIG_SERVER_CERT, False)
+        self._verify_server_cert = config.get(consts.BMCREMEDY_CONFIG_SERVER_CERT, True)
 
         # Load any saved configurations
         self._state = self.load_state()
