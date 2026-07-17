@@ -255,10 +255,6 @@
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.data.*.values.AppPassword",
-                    "data_type": "string"
-                },
-                {
                     "data_path": "action_result.data.*.values.ApplyTemplate",
                     "data_type": "string"
                 },
@@ -1438,10 +1434,6 @@
                 },
                 {
                     "data_path": "action_result.data.*.entries.*.values.AppLogin",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.entries.*.values.AppPassword",
                     "data_type": "string"
                 },
                 {

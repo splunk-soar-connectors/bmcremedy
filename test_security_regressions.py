@@ -28,3 +28,12 @@ def test_ticket_pagination_has_an_absolute_result_ceiling():
     assert "BMCREMEDY_MAX_RESULTS = 10000" in constants
     assert "result_limit = min(max_results, consts.BMCREMEDY_MAX_RESULTS)" in source
     assert "items_list[:result_limit]" in source
+
+
+def test_apppassword_is_removed_before_action_result_storage():
+    source = (ROOT / "bmcremedy_connector.py").read_text()
+    manifest = (ROOT / "bmcremedy.json").read_text()
+
+    assert 'str(key).casefold() != "apppassword"' in source
+    assert source.count("add_data(_redact_sensitive_fields(") == 2
+    assert ".values.AppPassword" not in manifest
