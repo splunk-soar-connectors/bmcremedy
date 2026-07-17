@@ -99,7 +99,7 @@
               <td>Incident Number</td>
               <td>
                 <a href="javascript:;"
-                   onclick="context_menu(this, [{'contains': ['bmcremedy incident id'], 'value': '{{ current_entry.values|by_key:'Incident Number' }}' }], 0, {{ container.id }}, null, false);">
+                   onclick="context_menu(this, [{'contains': ['bmcremedy incident id'], 'value': '{{ current_entry.values|by_key:'Incident Number'|escapejs }}' }], 0, {{ container.id }}, null, false);">
                   {{ current_entry.values|by_key:"Incident Number" }}
                   &nbsp;
                   <span class="fa fa-caret-down" style="font-size: smaller;"></span>
@@ -110,7 +110,7 @@
               <td>First Name</td>
               <td>
                 <a href="javascript:;"
-                   onclick="context_menu(this, [{'contains': ['bmcremedy first name'], 'value': '{{ current_entry.values|by_key:'First_Name' }}' }], 0, {{ container.id }}, null, false);">
+                   onclick="context_menu(this, [{'contains': ['bmcremedy first name'], 'value': '{{ current_entry.values|by_key:'First_Name'|escapejs }}' }], 0, {{ container.id }}, null, false);">
                   {{ current_entry.values|by_key:'First_Name' }}
                   &nbsp;&nbsp;
                   <span class="fa fa-caret-down" style="font-size: smaller;"></span>
@@ -121,7 +121,7 @@
               <td>Last Name</td>
               <td>
                 <a href="javascript:;"
-                   onclick="context_menu(this, [{'contains': ['bmcremedy last name'], 'value': '{{ current_entry.values|by_key:'Last_Name' }}' }], 0, {{ container.id }}, null, false);">
+                   onclick="context_menu(this, [{'contains': ['bmcremedy last name'], 'value': '{{ current_entry.values|by_key:'Last_Name'|escapejs }}' }], 0, {{ container.id }}, null, false);">
                   {{ current_entry.values|by_key:'Last_Name' }}
                   &nbsp;&nbsp;
                   <span class="fa fa-caret-down" style="font-size: smaller;"></span>
