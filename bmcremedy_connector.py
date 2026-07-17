@@ -1,6 +1,6 @@
 # File: bmcremedy_connector.py
 #
-# Copyright (c) 2017-2025 Splunk Inc.
+# Copyright (c) 2017-2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,11 +35,7 @@ class RetVal3(tuple):
 
 def _redact_sensitive_fields(value):
     if isinstance(value, dict):
-        return {
-            key: _redact_sensitive_fields(item)
-            for key, item in value.items()
-            if str(key).casefold() != "apppassword"
-        }
+        return {key: _redact_sensitive_fields(item) for key, item in value.items() if str(key).casefold() != "apppassword"}
     if isinstance(value, list):
         return [_redact_sensitive_fields(item) for item in value]
     return value
