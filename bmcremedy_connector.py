@@ -853,6 +853,7 @@ class BmcremedyConnector(BaseConnector):
 
         params["offset"] = offset
         params["limit"] = consts.BMCREMEDY_DEFAULT_PAGE_LIMIT
+        result_limit = min(max_results, consts.BMCREMEDY_MAX_RESULTS) if max_results else consts.BMCREMEDY_MAX_RESULTS
 
         while True:
             ret_val, items = self._make_rest_call_abstract(endpoint, action_result, params=params, method="get")
@@ -863,8 +864,8 @@ class BmcremedyConnector(BaseConnector):
             items_list.extend(items.get(key, []))
 
             # Max results fetched. Hence, exit the paginator.
-            if max_results and len(items_list) >= max_results:
-                return phantom.APP_SUCCESS, items_list[:max_results]
+            if len(items_list) >= result_limit:
+                return phantom.APP_SUCCESS, items_list[:result_limit]
 
             # 1. Items fetched is less than the default page limit, which means there is no more data to be processed
             # 2. Next page link is not available in the response, which means there is no more data to be fetched from the server

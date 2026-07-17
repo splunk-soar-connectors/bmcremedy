@@ -19,3 +19,12 @@ def test_widget_context_menu_values_are_escaped_for_javascript():
         for line in template.read_text().splitlines():
             if "onclick=\"context_menu" in line:
                 assert "|escapejs }}" in line, f"unescaped context-menu value in {template.name}"
+
+
+def test_ticket_pagination_has_an_absolute_result_ceiling():
+    source = (ROOT / "bmcremedy_connector.py").read_text()
+    constants = (ROOT / "bmcremedy_consts.py").read_text()
+
+    assert "BMCREMEDY_MAX_RESULTS = 10000" in constants
+    assert "result_limit = min(max_results, consts.BMCREMEDY_MAX_RESULTS)" in source
+    assert "items_list[:result_limit]" in source
