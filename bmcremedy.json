@@ -4,7 +4,7 @@
     "description": "This app supports ticket management functions on incidents in BMC Remedy",
     "publisher": "Splunk",
     "package_name": "phantom_bmcremedy",
-    "license": "Copyright (c) 2017-2025 Splunk Inc.",
+    "license": "Copyright (c) 2017-2026 Splunk Inc.",
     "main_module": "bmcremedy_connector.py",
     "type": "ticketing",
     "app_version": "2.1.4",
@@ -28,9 +28,9 @@
             "order": 0
         },
         "verify_server_cert": {
-            "description": "Verify server certificate",
+            "description": "Verify the server certificate. Disabling verification can expose credentials to network attackers and should only be used in isolated test environments.",
             "data_type": "boolean",
-            "default": false,
+            "default": true,
             "order": 1
         },
         "username": {
@@ -252,10 +252,6 @@
                 },
                 {
                     "data_path": "action_result.data.*.values.AppLogin",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.values.AppPassword",
                     "data_type": "string"
                 },
                 {
@@ -1438,10 +1434,6 @@
                 },
                 {
                     "data_path": "action_result.data.*.entries.*.values.AppLogin",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.entries.*.values.AppPassword",
                     "data_type": "string"
                 },
                 {
@@ -3395,5 +3387,11 @@
             },
             "versions": "EQ(*)"
         }
-    ]
+    ],
+    "pip39_dependencies": {
+        "wheel": []
+    },
+    "pip313_dependencies": {
+        "wheel": []
+    }
 }

@@ -1,6 +1,6 @@
 # File: bmcremedy_consts.py
 #
-# Copyright (c) 2017-2025 Splunk Inc.
+# Copyright (c) 2017-2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -63,6 +63,7 @@ BMCREMEDY_JSON_VAULT_ID = "vault_id"
 BMCREMEDY_UNKNOWN_VAULT_ID = "Invalid or unknown vault ID"
 BMCREMEDY_ATTACHMENT_LIMIT_EXCEED = "Maximum 3 attachments can be provided"
 BMCREMEDY_DEFAULT_PAGE_LIMIT = 100
+BMCREMEDY_MAX_RESULTS = 10000
 BMCREMEDY_DEFAULT_OFFSET = 0
 BMCREMEDY_ENCODE_TEMPLATE_FILE = """--{boundary}
 Content-Disposition: form-data; name="{name}"; filename="{filename}"

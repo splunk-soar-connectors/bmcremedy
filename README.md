@@ -1,9 +1,9 @@
 # BMC Remedy
 
-Publisher: Splunk \
-Connector Version: 2.1.4 \
-Product Vendor: BMC Software \
-Product Name: BMC Remedy \
+Publisher: Splunk <br>
+Connector Version: 2.1.4 <br>
+Product Vendor: BMC Software <br>
+Product Name: BMC Remedy <br>
 Minimum Product Version: 5.3.5
 
 This app supports ticket management functions on incidents in BMC Remedy
@@ -52,25 +52,25 @@ This table lists the configuration variables required to operate BMC Remedy. The
 VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
 **url** | required | string | Complete URL (e.g. http://mybmc.contoso.com:8008) |
-**verify_server_cert** | optional | boolean | Verify server certificate |
+**verify_server_cert** | optional | boolean | Verify the server certificate. Disabling verification can expose credentials to network attackers and should only be used in isolated test environments. |
 **username** | required | string | Username |
 **password** | required | password | Password |
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied credentials \
-[create ticket](#action-create-ticket) - Create incident \
-[update ticket](#action-update-ticket) - Update an existing incident \
-[get ticket](#action-get-ticket) - Get incident information \
-[list tickets](#action-list-tickets) - Get list of incidents \
-[set status](#action-set-status) - Set incident status \
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied credentials <br>
+[create ticket](#action-create-ticket) - Create incident <br>
+[update ticket](#action-update-ticket) - Update an existing incident <br>
+[get ticket](#action-get-ticket) - Get incident information <br>
+[list tickets](#action-list-tickets) - Get list of incidents <br>
+[set status](#action-set-status) - Set incident status <br>
 [add comment](#action-add-comment) - Add work log information to the incident
 
 ## action: 'test connectivity'
 
 Validate the asset configuration for connectivity using supplied credentials
 
-Type: **test** \
+Type: **test** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -85,7 +85,7 @@ No Output
 
 Create incident
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 Typically the following parameters are required, but this can be configured, therefore the action defines all parameters as optional and relies on the installation to validate the required parameters:<ul><li><b>first_name</b></li><li><b>last_name</b></li><li><b>description</b></li><li><b>reported_source</b></li><li><b>service_type</b></li></ul>If field value is provided individually as well as in <b>fields</b> parameter, then value in <b>fields</b> parameter will be used for creating the incident. For example, to create an incident using <b>fields</b> parameter and assign it to an assignee named User, set the <b>fields</b> parameter to {"First_Name": "Customer First Name", "Last_Name": "Customer Last Name", "Description": "Incident Description", "Service_Type": "User Service Restoration", "Reported Source": "Direct Input", "Status": "Assigned", "Assignee Login ID": "User", "Assignee": "User Name"}<br><b>Note:</b> Only single JSON formatted dictionary is allowed in <b>fields</b> action parameter<br>To add comment set <b>fields</b> parameter to {"Work Log Type": "General Information", "Detailed Description": "Comment to add"}.<br>To create an incident, <b>first_name</b> and <b>last_name</b> are those of the customer that exists in the system.<br>The <b>vault_id</b> parameter takes the vault ID of a file and attaches it to the incident.<br>The attachment should be placed in vault of the container from which the action will be executed, and it would appear in <b>Work Detail</b> section on BMC Remedy.<br>Typical (default installation) values for <b>impact</b> are:<ul><li>1-Extensive/Widespread</li><li>2-Significant/Large</li><li>3-Moderate/Limited</li><li>4-Minor/Localized</li></ul>Typical (default installation) values for <b>urgency</b> are:<ul><li>1-Critical</li><li>2-High</li><li>3-Medium</li><li>4-Low</li></ul>Typical (default installation) values for <b>status</b> are:<ul><li>New</li><li>Assigned</li><li>In Progress</li><li>Pending</li><li>Resolved</li><li>Closed</li><li>Cancelled</li></ul>Typical (default installation) values for <b>reported_source</b> are:<ul><li>Direct Input</li><li>Email</li><li>External Escalation</li><li>Fax</li><li>Self Service</li><li>Systems Management</li><li>Phone</li><li>Voice Mail</li><li>Walk In</li><li>Web</li><li>Other</li><li>BMC Impact Manager Event</li></ul>Typical (default installation) values for <b>service_type</b> are:<ul><li>User Service Restoration</li><li>User Service Request</li><li>Infrastructure Restoration</li><li>Infrastructure Event</li></ul>Typical (default installation) values for <b>work_info_type</b> are:<ul><li>Customer Inbound:<ul><li>Customer Communication</li><li>Customer Follow-up</li><li>Customer Status Update</li></ul></li><li>Customer Outbound<ul><li>Closure Follow Up</li><li>Detail Clarification</li><li>General Information</li><li>Resolution Communications</li><li>Satisfaction Survey</li><li>Status Update</li></ul></li><li>General<ul><li>Incident Task / Action</li><li>Problem Script</li><li>Working Log</li><li>Email System</li><li>Paging System</li><li>BMC Impact Manager Update</li><li>Chat</li></ul></li><li>Vendor<ul><li>Vendor Communication</li></ul></li></ul>Typical (default installation) values of <b>status_reason</b> for a given <b>status</b> are:<ul><li>Pending<ul><li>Automated Resolution Reported</li><li>Client Action Required</li><li>Client Hold</li><li>Future Enhancement</li><li>Infrastructure Change</li><li>Local Site Action Required</li><li>Monitoring Incident</li><li>Purchase Order Approval</li><li>Registration Approval</li><li>Request</li><li>Supplier Delivery</li><li>Support Contact Hold</li><li>Third Party Vendor Action Reqd</li></ul></li><li>Resolved<ul><li>Automated Resolution Reported</li><li>Customer Follow-Up Required</li><li>Future Enhancement</li><li>Monitoring Incident</li><li>No Further Action Required</li><li>Temporary Corrective Action</li></ul></li><li>Closed<ul><li>Automated Resolution Reported</li><li>Infrastructure Change Created</li></ul></li><li>Cancelled<ul><li>No longer a Causal CI</li></ul></li></ul>.
@@ -129,7 +129,6 @@ action_result.data.\*.values.AccessMode | string | | |
 action_result.data.\*.values.AppInstanceServer | string | | |
 action_result.data.\*.values.AppInterfaceForm | string | | |
 action_result.data.\*.values.AppLogin | string | | |
-action_result.data.\*.values.AppPassword | string | | |
 action_result.data.\*.values.ApplyTemplate | string | | |
 action_result.data.\*.values.Area Business | string | | |
 action_result.data.\*.values.Assigned Group | string | | |
@@ -371,7 +370,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Update an existing incident
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 This action can be used to assign an incident to a user. Use the <b>fields</b> parameter to set the <b>Status</b>, <b>Assignee Login ID</b> and <b>Assignee</b> values. For example: To assign an incident to the user <b>User</b> set the <b>fields</b> parameter to {"Status": "Assigned", "Assignee Login ID": "User", "Assignee": "User Name"}<br><b>Note:</b> Only single JSON formatted dictionary is allowed in <b>fields</b> action parameter<br>To add comment set <b>fields</b> parameter to {"Work Log Type": "General Information", "Detailed Description": "Comment to add"}.<br>The attachment should be placed in vault of the container from which the action will be executed, and it would appear in <b>Work Detail</b> section on BMC Remedy.<br>Typical (default installation) values for <b>work_info_type</b> are:<ul><li>Customer Inbound:<ul><li>Customer Communication</li><li>Customer Follow-up</li><li>Customer Status Update</li></ul></li><li>Customer Outbound<ul><li>Closure Follow Up</li><li>Detail Clarification</li><li>General Information</li><li>Resolution Communications</li><li>Satisfaction Survey</li><li>Status Update</li></ul></li><li>General<ul><li>Incident Task / Action</li><li>Problem Script</li><li>Working Log</li><li>Email System</li><li>Paging System</li><li>BMC Impact Manager Update</li><li>Chat</li></ul></li><li>Vendor<ul><li>Vendor Communication</li></ul></li></ul>.
@@ -404,7 +403,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get incident information
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -425,7 +424,6 @@ action_result.data.\*.entries.\*.values.AccessMode | string | | |
 action_result.data.\*.entries.\*.values.AppInstanceServer | string | | |
 action_result.data.\*.entries.\*.values.AppInterfaceForm | string | | |
 action_result.data.\*.entries.\*.values.AppLogin | string | | |
-action_result.data.\*.entries.\*.values.AppPassword | string | | |
 action_result.data.\*.entries.\*.values.Assigned Group | string | | |
 action_result.data.\*.entries.\*.values.Assigned Group ID | string | | |
 action_result.data.\*.entries.\*.values.Assigned Group Shift ID | string | | |
@@ -772,7 +770,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get list of incidents
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 <p>The action supports limiting the number of incidents returned using the <b>limit</b> parameter. The input should be a positive integer. The results are always sorted in descending order based on their last modified date to place the latest modified incidents at the top. For example to get the latest 10 incidents that matched the filter, specify the limit as 10. If <b>limit</b> is zero or not specified, then all incidents will be returned.</p><p>To define a set of criteria to filter incidents, query must be provided in <b>query</b> parameter.<br>Query must contain field label enclosed in single quotation marks(''), and non-numeric values in double quotation marks("").<br>Eg: <b>'Incident Number'="INC000000000001", 'Submit Date'="February 20, 2017"</b><br>If a field name contains single quotation mark, add another single quotation mark next to it.<br>Eg: If field name is <b>Submitter's Phone Number</b>, query must contain field label as <b>'Submitter''s Phone Number'</b><br>More information about using fields in <b>query</b> parameter can be found on <a href="https://docs.bmc.com/docs/ars2008/using-fields-in-the-advanced-search-bar-928611932.html#Usingfieldsintheadvancedsearchbar-4Usingvaluesintheadvancedsearchbar" target='_blank'>Fields in query</a>.<br>Query can accept various operators such as:<br><ol><li><b>Relational and Logical Operators</b>:<ul><li>Relational and Logical operators are useful especially in non-text fields (such as date and time fields) when you want to search for a value within a numerical range.</li><li>Some of the examples are as follows:<br><b>('Submitter'="admin") AND (NOT 'Incident Number'="INC000000000001")</b><br><b>'Impact'="1-Extensive/Widespread" OR 'Urgency'="1-Critical"</b><br><b>'Incident Number' = "INC000000000001"</b><br><b>'Status' != "Closed"</b><br><b>'Submit Date' > "February 28, 2017"</b></li><li>More information about relational and logical operators can be found at <a href="https://docs.bmc.com/docs/ars2008/using-relational-operators-in-the-advanced-search-bar-928611933.html" target='_blank'>Relational and logical Operators link</a>.</li></ul></li><li><b>Keywords in query</b>:<ul><li>Keywords can be used anywhere where character values are accepted.</li><li>Most commonly used keywords are: <b>$DATE$</b>, <b>$NULL$</b>, <b>$TIME$</b>, <b>$TIMESTAMP$</b>, <b>$USER$</b>, and <b>$WEEKDAY$</b>.</li><li>Some of the examples are as follows:<br><b>'Assignee' = $NULL$</b><br><b>'Create date' < ($TIMESTAMP$ - 24\*60\*60)</b></li><li>More information about Keywords can be found at <a href="https://docs.bmc.com/docs/ars2008/using-fields-in-the-advanced-search-bar-928611932.html#Usingfieldsintheadvancedsearchbar-4Usingvaluesintheadvancedsearchbar" target='_blank'>Keywords link</a>.</li></ul></li><li><b>Wildcard symbols</b>:<ul><li>Wildcard symbols can be used to indicate one or more characters.</li><li>Wildcard symbols that can be used in query are: <b>%</b>, <b>_</b>, <b>-</b>, <b>[]</b>, <b>[^]</b></li><li>Some of the examples are as follows:<br><b>'Submitter' LIKE "\*Bob%ton\*"</b><br><b>'Phone Number' LIKE "_ 212 5555454 (66)"</b></li><li>More information about wildcard symbols can be found at <a href="https://docs.bmc.com/docs/ars2008/using-relational-operators-and-wildcard-symbols-in-a-search-928611919.html#Usingrelationaloperatorsandwildcardsymbolsinasearch-281729" target='_blank'>Wildcard symbols link</a>.</li></ul></li></ol>More information about BMC Remedy Query Syntax can be found at <a href="https://docs.bmc.com/docs/ars2008/using-the-advanced-search-bar-928611931.html" target='_blank'>Query Syntax link</a>.</p>.
@@ -812,7 +810,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Set incident status
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 Typical (default installation) values for <b>status</b> are:<ul><li>New</li><li>Assigned</li><li>In Progress</li><li>Pending</li><li>Resolved</li><li>Closed</li><li>Cancelled</li></ul>Typical (default installation) values of <b>status_reason</b> for a given <b>status</b> are:<ul><li>Pending<ul><li>Automated Resolution Reported</li><li>Client Action Required</li><li>Client Hold</li><li>Future Enhancement</li><li>Infrastructure Change</li><li>Local Site Action Required</li><li>Monitoring Incident</li><li>Purchase Order Approval</li><li>Registration Approval</li><li>Request</li><li>Supplier Delivery</li><li>Support Contact Hold</li><li>Third Party Vendor Action Reqd</li></ul></li><li>Resolved<ul><li>Automated Resolution Reported</li><li>Customer Follow-Up Required</li><li>Future Enhancement</li><li>Monitoring Incident</li><li>No Further Action Required</li><li>Temporary Corrective Action</li></ul></li><li>Closed<ul><li>Automated Resolution Reported</li><li>Infrastructure Change Created</li></ul></li><li>Cancelled<ul><li>No longer a Causal CI</li></ul></li></ul>.
@@ -855,7 +853,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Add work log information to the incident
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 Typical (default installation) values for <b>work_info_type</b> are:<ul><li>Customer Inbound:<ul><li>Customer Communication</li><li>Customer Follow-up</li><li>Customer Status Update</li></ul></li><li>Customer Outbound<ul><li>Closure Follow Up</li><li>Detail Clarification</li><li>General Information</li><li>Resolution Communications</li><li>Satisfaction Survey</li><li>Status Update</li></ul></li><li>General<ul><li>Incident Task / Action</li><li>Problem Script</li><li>Working Log</li><li>Email System</li><li>Paging System</li><li>BMC Impact Manager Update</li><li>Chat</li></ul></li><li>Vendor<ul><li>Vendor Communication</li></ul></li></ul>Typical (default installation) values for <b>secure_work_log</b> are:<ul><li>Yes</li><li>No</li></ul>Typical (default installation) values for <b>view_access</b> are:<ul><li>Internal</li><li>Public</li></ul>If the user provides 'description' and 'comment' as input parameters, the priority will be given to 'comment'. so, under the notes section of a particular incident the value of 'comment' will be displayed. If the user provides either 'description' or 'comment', the given input value will be displayed under the notes section.
@@ -894,7 +892,7 @@ ______________________________________________________________________
 
 Auto-generated Splunk SOAR Connector documentation.
 
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

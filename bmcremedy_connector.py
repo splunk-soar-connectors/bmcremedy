@@ -1,6 +1,6 @@
 # File: bmcremedy_connector.py
 #
-# Copyright (c) 2017-2025 Splunk Inc.
+# Copyright (c) 2017-2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,6 +31,14 @@ import bmcremedy_consts as consts
 class RetVal3(tuple):
     def __new__(cls, val1, val2=None, val3=None):
         return tuple.__new__(RetVal3, (val1, val2, val3))
+
+
+def _redact_sensitive_fields(value):
+    if isinstance(value, dict):
+        return {key: _redact_sensitive_fields(item) for key, item in value.items() if str(key).casefold() != "apppassword"}
+    if isinstance(value, list):
+        return [_redact_sensitive_fields(item) for item in value]
+    return value
 
 
 class BmcremedyConnector(BaseConnector):
@@ -130,7 +138,7 @@ class BmcremedyConnector(BaseConnector):
         self._base_url = config[consts.BMCREMEDY_CONFIG_SERVER].strip("/")
         self._api_username = config[consts.BMCREMEDY_CONFIG_API_USERNAME]
         self._api_password = config[consts.BMCREMEDY_CONFIG_API_PASSWORD]
-        self._verify_server_cert = config.get(consts.BMCREMEDY_CONFIG_SERVER_CERT, False)
+        self._verify_server_cert = config.get(consts.BMCREMEDY_CONFIG_SERVER_CERT, True)
 
         # Load any saved configurations
         self._state = self.load_state()
@@ -710,7 +718,7 @@ class BmcremedyConnector(BaseConnector):
             if phantom.is_fail(add_attachment_status):
                 return action_result.get_status()
 
-        action_result.add_data(incident_response_data)
+        action_result.add_data(_redact_sensitive_fields(incident_response_data))
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
@@ -832,7 +840,7 @@ class BmcremedyConnector(BaseConnector):
 
         # Adding comments of incident in ticket_details
         ticket_details.update({"work_details": ticket_comment_details})
-        action_result.add_data(ticket_details)
+        action_result.add_data(_redact_sensitive_fields(ticket_details))
         summary_data["ticket_availability"] = True if ticket_details.get("entries") else False
 
         return action_result.set_status(phantom.APP_SUCCESS)
@@ -853,6 +861,7 @@ class BmcremedyConnector(BaseConnector):
 
         params["offset"] = offset
         params["limit"] = consts.BMCREMEDY_DEFAULT_PAGE_LIMIT
+        result_limit = min(max_results, consts.BMCREMEDY_MAX_RESULTS) if max_results else consts.BMCREMEDY_MAX_RESULTS
 
         while True:
             ret_val, items = self._make_rest_call_abstract(endpoint, action_result, params=params, method="get")
@@ -863,8 +872,8 @@ class BmcremedyConnector(BaseConnector):
             items_list.extend(items.get(key, []))
 
             # Max results fetched. Hence, exit the paginator.
-            if max_results and len(items_list) >= max_results:
-                return phantom.APP_SUCCESS, items_list[:max_results]
+            if len(items_list) >= result_limit:
+                return phantom.APP_SUCCESS, items_list[:result_limit]
 
             # 1. Items fetched is less than the default page limit, which means there is no more data to be processed
             # 2. Next page link is not available in the response, which means there is no more data to be fetched from the server

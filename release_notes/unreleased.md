@@ -1,2 +1,7 @@
 **Unreleased**
+
 * Remove beautifulsoup4 from requirements.txt
+* Enabled TLS server certificate verification by default.
+* Escaped dynamic widget values before embedding them in JavaScript handlers.
+* Limited ticket pagination to 10,000 results, including when the limit is omitted or zero.
+* Removed AppPassword fields before storing create-ticket and get-ticket action results.
