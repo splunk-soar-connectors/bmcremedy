@@ -492,6 +492,7 @@ class BmcremedyConnector(BaseConnector):
                     files=files,
                     verify=self._verify_server_cert,
                     timeout=consts.BMCREMEDY_DEFAULT_TIMEOUT,
+                    stream=True,
                 )
             else:
                 response = request_func(
@@ -501,6 +502,7 @@ class BmcremedyConnector(BaseConnector):
                     params=params,
                     verify=self._verify_server_cert,
                     timeout=consts.BMCREMEDY_DEFAULT_TIMEOUT,
+                    stream=True,
                 )
 
         except requests.exceptions.ProxyError as e:
@@ -518,6 +520,32 @@ class BmcremedyConnector(BaseConnector):
             # Set the action_result status to error, the handler function will most probably return as is
             action_result_error_message = f"{consts.BMCREMEDY_ERROR_SERVER_CONNECTIVITY}. {error_message}"
             return RetVal3(action_result.set_status(phantom.APP_ERROR, action_result_error_message), response_data, response)
+
+        content_length = response.headers.get("content-length")
+        if content_length:
+            try:
+                if int(content_length) > consts.BMCREMEDY_MAX_RESPONSE_BYTES:
+                    response.close()
+                    return RetVal3(
+                        action_result.set_status(phantom.APP_ERROR, "Response body exceeded the 5 MiB connector limit"),
+                        response_data,
+                        response,
+                    )
+            except ValueError:
+                pass
+
+        response_body = bytearray()
+        for chunk in response.iter_content(chunk_size=64 * 1024):
+            response_body.extend(chunk)
+            if len(response_body) > consts.BMCREMEDY_MAX_RESPONSE_BYTES:
+                response.close()
+                return RetVal3(
+                    action_result.set_status(phantom.APP_ERROR, "Response body exceeded the 5 MiB connector limit"),
+                    response_data,
+                    response,
+                )
+        response._content = bytes(response_body)
+        response._content_consumed = True
 
         # Process an HTML response, Do this no matter what the api talks.
         # There is a high chance of a PROXY in between phantom and the rest of
@@ -860,16 +888,23 @@ class BmcremedyConnector(BaseConnector):
         items_list = list()
 
         params["offset"] = offset
-        params["limit"] = consts.BMCREMEDY_DEFAULT_PAGE_LIMIT
         result_limit = min(max_results, consts.BMCREMEDY_MAX_RESULTS) if max_results else consts.BMCREMEDY_MAX_RESULTS
 
         while True:
+            remaining = result_limit - len(items_list)
+            requested_items = min(consts.BMCREMEDY_DEFAULT_PAGE_LIMIT, remaining)
+            params["limit"] = requested_items
             ret_val, items = self._make_rest_call_abstract(endpoint, action_result, params=params, method="get")
 
             if phantom.is_fail(ret_val):
                 return action_result.get_status(), None
 
-            items_list.extend(items.get(key, []))
+            page_items = items.get(key)
+            if not isinstance(page_items, list):
+                return action_result.set_status(phantom.APP_ERROR, "Ticket pagination returned an invalid result page"), None
+            if len(page_items) > requested_items:
+                return action_result.set_status(phantom.APP_ERROR, "Ticket pagination returned more items than requested"), None
+            items_list.extend(page_items)
 
             # Max results fetched. Hence, exit the paginator.
             if len(items_list) >= result_limit:
@@ -877,10 +912,10 @@ class BmcremedyConnector(BaseConnector):
 
             # 1. Items fetched is less than the default page limit, which means there is no more data to be processed
             # 2. Next page link is not available in the response, which means there is no more data to be fetched from the server
-            if (len(items.get(key, [])) < consts.BMCREMEDY_DEFAULT_PAGE_LIMIT) or (not items.get("_links", {}).get("next")):
+            if (len(page_items) < requested_items) or (not items.get("_links", {}).get("next")):
                 break
 
-            params["offset"] += consts.BMCREMEDY_DEFAULT_PAGE_LIMIT
+            params["offset"] += requested_items
 
         return phantom.APP_SUCCESS, items_list
 

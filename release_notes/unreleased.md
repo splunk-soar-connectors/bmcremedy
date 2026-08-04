@@ -1,1 +1,3 @@
 **Unreleased**
+
+* Bound response bodies before JSON parsing and reject oversized ticket result pages before retention.

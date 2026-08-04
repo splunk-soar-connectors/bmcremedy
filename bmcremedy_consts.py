@@ -64,6 +64,7 @@ BMCREMEDY_UNKNOWN_VAULT_ID = "Invalid or unknown vault ID"
 BMCREMEDY_ATTACHMENT_LIMIT_EXCEED = "Maximum 3 attachments can be provided"
 BMCREMEDY_DEFAULT_PAGE_LIMIT = 100
 BMCREMEDY_MAX_RESULTS = 10000
+BMCREMEDY_MAX_RESPONSE_BYTES = 5 * 1024 * 1024
 BMCREMEDY_DEFAULT_OFFSET = 0
 BMCREMEDY_ENCODE_TEMPLATE_FILE = """--{boundary}
 Content-Disposition: form-data; name="{name}"; filename="{filename}"
